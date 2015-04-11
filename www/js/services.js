@@ -1,73 +1,11 @@
-
-var AppConfig = {
-    host: 'http://122.228.188.134:9876',
-    // host: 'http://192.168.0.147:8100',
-    category: '/app/goods/cate/list.jhtml', //分类
-    cart: {
-        add:  '/app/cart/add.jhtml', //添加
-        list: '/app/cart/list.jhtml', //列表
-        edit: '/app/cart/edit.jhtml', //编辑
-        delete: '/app/cart/delete.jhtml' //删除
-    },
-    goods: {
-        list: '/app/goods/list', //商品列表
-        search:  '/app/goods/search/tip.jhtml?keyword=', //搜索
-        search_list: '/app/goods/search/list', //搜索结果
-        product:   '/app/goods/{id}.jhtml', //商品页
-        validity: '/app/goods/getRecentlyBatch.jhtml?id=', //商品有效期
-        promotion: '/app/goods/promotion/list' //促销活动
-    },
-    activity: {
-        home: '/app/goods/promotion.jhtml'
-    },
-    login: {
-        publicKey: '/app/system/publicKey.jhtml', //加密秘钥
-        login: '/app/login.jhtml', //请求登陆
-        loginStatus: '/app/status.jhtml', //登陆状态
-        logout: '/app/logout.jhtml' //退出登陆
-    },
-    order: {
-        create: '/app/order/create.jhtml' ,//创建订单
-        detail: '/app/order/detail.jhtml?tradeNo=', //订单详情
-        cancel: '/app/order/cancelOrder.jhtml', //取消订单
-        deleteItem: '/app/order/deleteOrderItem.jhtml', //删除订单项
-        confirm: '/app/order/confirm.jhtml', //确认订单
-        list: '/app/order/list.jhtml', //订单列表
-        log: '/app/order/log.jhtml?orderNo=', //订单日志
-        deleteOrder: '/app/order/delete.jhtml', //删除订单
-        finish: '/app/order/confirmReceive.jhtml' //订单完成
-    },
-    member: {
-        info: '/app/member/info.jhtml', //会员信息
-            modifyPwd: '/app/member/modifyPwdSubmit.jhtml', //修改密码
-            captcha : '/app/member/sendEmailCaptcha.jhtml' ,//发送邮箱验证码
-            verify: '/app/member/verifyEmail.jhtml' //验证并修改邮箱
-    },
-    //到货通知
-    stocknotify: {
-        register: '/app/stockNotice/register.jhtml' , //注册到货通知
-        list: '/app/stockNotice/list.jhtml', //注册的列表
-        delete: '/app/stockNotice/delete.jhtml' //删除
-    },
-    //收藏
-    favorite: {
-        add: '/app/favorite/add.jhtml', //添加商品收藏
-        tagList: '/app/favorite/tag/list.jhtml', //收藏标签
-        list: '/app/favorite/list.jhtml', //收藏商品列表
-        del: '/app/favorite/delete.jhtml' //删除收藏商品
-    }
-};
-
-angular.module('starter.services', ['starter.factory'])
+angular.module('starter.services', ['starter.factory', 'starter.appConfig'])
 
     //分类
-    .factory("CategoryServices", function(HttpFactory) {
-        var url = AppConfig['host'] + AppConfig['category'];
+    .factory("CategoryServices", function(HttpFactory, AppUrl) {
+        var url = AppUrl['host'] + AppUrl['category'];
 
         return {
             getTop: function(handle) {
-                //return Http.get(url+'?isTop=true', {cache: true});
-                console.log(url);
                  return HttpFactory({
                     url: url,
                     data: {isTop: true},
@@ -89,12 +27,12 @@ angular.module('starter.services', ['starter.factory'])
         }
     })
     //商品列表
-    .factory('GoodsListServices', function(Http) {
+    .factory('GoodsListServices', function(Http, AppUrl) {
 
             var url = {
-                def: AppConfig['host'] + AppConfig['goods']['list'],
-                search: AppConfig['host'] +  AppConfig['goods']['search_list'],
-                promotion: AppConfig['host'] + AppConfig['goods']['promotion']
+                def: AppUrl['host'] + AppUrl['goods']['list'],
+                search: AppUrl['host'] +  AppUrl['goods']['search_list'],
+                promotion: AppUrl['host'] + AppUrl['goods']['promotion']
             }
 
             var filter = [
@@ -300,7 +238,7 @@ angular.module('starter.services', ['starter.factory'])
         })
 
     //商品详情
-    .factory('ProductServices', function(Http) {
+    .factory('ProductServices', function(Http, AppUrl) {
         return {
             /**
              * 根据id获取订单信息
@@ -309,7 +247,7 @@ angular.module('starter.services', ['starter.factory'])
              */
             getById: function(id) {
                 // console.log(url['product'].replace('{id}',id));
-                return Http.get(AppConfig['host'] + AppConfig['goods']['product'].replace('{id}',id));
+                return Http.get(AppUrl['host'] + AppUrl['goods']['product'].replace('{id}',id));
             },
             /**
              * 获取商品有效期
@@ -317,7 +255,7 @@ angular.module('starter.services', ['starter.factory'])
              * @return {[object]}   $http
              */
             fRecentlyBatch: function(nId, callback) {
-                var url = AppConfig['host'] + AppConfig['goods']['validity'];
+                var url = AppUrl['host'] + AppUrl['goods']['validity'];
                 return Http.get(url + nId , {cache: false})
                     .success(function(data){
                         if (data.type.toLowerCase() == 'success') {
@@ -329,17 +267,17 @@ angular.module('starter.services', ['starter.factory'])
         }
     })
     //商品搜索
-    .factory('SearchServices', function(Http) {
+    .factory('SearchServices', function(Http, AppUrl) {
         return {
             findByKeyWord: function(keyword) {
-                var request = AppConfig['host'] + AppConfig['goods']['search'] + keyword;
+                var request = AppUrl['host'] + AppUrl['goods']['search'] + keyword;
                 return Http.secretGet(request, {cache: true});
             }
         }
 
     })
     //购物车
-    .factory('CartServices', function(Http, $ionicPopup) {
+    .factory('CartServices', function(Http, $ionicPopup, AppUrl) {
 
         var Cart = function(){
             this.list = [];
@@ -349,7 +287,7 @@ angular.module('starter.services', ['starter.factory'])
             //添加到购物车
             add: function(id, num, sCallBack, eCallBack){
                 var params = {goodsId: id, quantity: num};
-                Http.post(AppConfig['host'] + AppConfig['cart']['add'], params)
+                Http.post(AppUrl['host'] + AppUrl['cart']['add'], params)
                     .success(function(data) {
                         if (data.type.toLowerCase() == 'success') {
                              if(sCallBack) sCallBack();
@@ -361,7 +299,7 @@ angular.module('starter.services', ['starter.factory'])
             },
             //获取购物车中的商品
             getList: function(callback) {
-                return Http.get(AppConfig['host'] + AppConfig['cart']['list'])
+                return Http.get(AppUrl['host'] + AppUrl['cart']['list'])
                     .success(function(data) {
                         this.list = data;
                     }.bind(this))
@@ -369,12 +307,12 @@ angular.module('starter.services', ['starter.factory'])
             //修改数量
             edit: function(id, quantity) {
                 var params = {cartItemId: id, quantity:quantity};
-                return Http.secretPost(AppConfig['host'] + AppConfig['cart']['edit'], params)
+                return Http.secretPost(AppUrl['host'] + AppUrl['cart']['edit'], params)
             },
             //删除购物车项
             del: function(aIds) {
                 var params = {cartItemIds: aIds};
-                return Http.post(AppConfig['host'] + AppConfig['cart']['delete'], params);
+                return Http.post(AppUrl['host'] + AppUrl['cart']['delete'], params);
 
             }
         }
@@ -384,10 +322,10 @@ angular.module('starter.services', ['starter.factory'])
     })
 
     //用户登陆
-    .factory('LoginServices', function(Http) {
+    .factory('LoginServices', function(Http, AppUrl) {
         var  url = {
-            publicKey: AppConfig['host'] + AppConfig['login']['publicKey'],
-            login: AppConfig['host'] + AppConfig['login']['login']
+            publicKey: AppUrl['host'] + AppUrl['login']['publicKey'],
+            login: AppUrl['host'] + AppUrl['login']['login']
         }
         return {
             //获取秘钥
@@ -399,7 +337,7 @@ angular.module('starter.services', ['starter.factory'])
             },
             //登陆状态
             loginStatus: function(sCallBack, eCallBack) {
-                var url = AppConfig['host'] + AppConfig['login']['loginStatus'];
+                var url = AppUrl['host'] + AppUrl['login']['loginStatus'];
                 return Http.secretGet(url)
                     .success(function(data) {
                         if (data.isLogin == true && sCallBack) {
@@ -411,7 +349,7 @@ angular.module('starter.services', ['starter.factory'])
             },
             //退出登录
             logout: function() {
-                var url = AppConfig['host'] + AppConfig['login']['logout'];
+                var url = AppUrl['host'] + AppUrl['login']['logout'];
 
                 return Http.get(url);
             }
@@ -419,7 +357,7 @@ angular.module('starter.services', ['starter.factory'])
     })
 
     //订单
-    .factory('OrderServices', function(Http, $ionicPopup) {
+    .factory('OrderServices', function(Http, $ionicPopup, AppUrl) {
         var Order = function(){
             this.orderNo = '';
             this.aDetail = {};
@@ -440,11 +378,11 @@ angular.module('starter.services', ['starter.factory'])
             //生成订单
             create: function(sIds, fSuccess){
                 var params = {ids: sIds};
-                return Http.post(AppConfig['host'] + AppConfig['order']['create'], params)
+                return Http.post(AppUrl['host'] + AppUrl['order']['create'], params)
             },
             //订单详情
             detail: function() {
-                Http.get(AppConfig['host'] + AppConfig['order']['detail'] + this.orderNo, {cache: false})
+                Http.get(AppUrl['host'] + AppUrl['order']['detail'] + this.orderNo, {cache: false})
                     .success(function(data){
                         this.aDetail = data;
                     }.bind(this))
@@ -458,7 +396,7 @@ angular.module('starter.services', ['starter.factory'])
              */
             cancel: function(orderNo, sCallBack, eCallBack) {
                 var params = {orderNo: orderNo || this.orderNo};
-                Http.post(AppConfig['host'] + AppConfig['order']['cancel'], params)
+                Http.post(AppUrl['host'] + AppUrl['order']['cancel'], params)
                     .success(function(data){
                         if (sCallBack) {
                             sCallBack(data);
@@ -476,7 +414,7 @@ angular.module('starter.services', ['starter.factory'])
              return object
              */
             deleteItem: function(orderId) {
-                var url = AppConfig['host'] + AppConfig['order']['deleteItem'],
+                var url = AppUrl['host'] + AppUrl['order']['deleteItem'],
                     params = {id: orderId};
                 return Http.post(url, params);
             },
@@ -486,7 +424,7 @@ angular.module('starter.services', ['starter.factory'])
              */
             confirm: function() {
 
-                var url = AppConfig['host'] + AppConfig['order']['confirm'],
+                var url = AppUrl['host'] + AppUrl['order']['confirm'],
                     params = {
                         orderNo: this.orderNo, //订单编号
                         payType: 'cashOnDelivery' //支付方式 onlinePayment("在线支付"), cashOnDelivery("货到付款") 当前只支持 货到付款
@@ -498,7 +436,7 @@ angular.module('starter.services', ['starter.factory'])
             },
             //商品列表
             getList: function() {
-                var url = AppConfig['host'] + AppConfig['order']['list'],
+                var url = AppUrl['host'] + AppUrl['order']['list'],
                     p = '';
                 for (i in this.where) {
                     if (this.where[i] !== false && this.where[i] != -1) {
@@ -530,7 +468,7 @@ angular.module('starter.services', ['starter.factory'])
              * @return {[type]}
              */
             requestLog: function() {
-                var url = AppConfig['host'] + AppConfig['order']['log'] + this.orderNo;
+                var url = AppUrl['host'] + AppUrl['order']['log'] + this.orderNo;
                 return Http.get(url)
                     .success(function(data){
                         this.logList = data;
@@ -545,7 +483,7 @@ angular.module('starter.services', ['starter.factory'])
              * @return {[type]}         [description]
              */
             deleteOrder: function(orderNo, sCallBack, eCallBack) {
-                var url = AppConfig['host'] + AppConfig['order']['deleteOrder'],
+                var url = AppUrl['host'] + AppUrl['order']['deleteOrder'],
                     params = {orderNo: orderNo};
                 Http.post(url, params)
                     .success(function(data) {
@@ -561,7 +499,7 @@ angular.module('starter.services', ['starter.factory'])
              *
              */
             finishOrder: function(orderNo, sCallBack) {
-                var url = AppConfig['host'] + AppConfig['order']['finish'],
+                var url = AppUrl['host'] + AppUrl['order']['finish'],
                     params = {orderNo: orderNo};
                 Http.post(url, params)
                     .success(function(data) {
@@ -605,7 +543,7 @@ angular.module('starter.services', ['starter.factory'])
     })
 
     //会员
-    .factory('MemberServices', function(Http, EncryptPwd) {
+    .factory('MemberServices', function(Http, EncryptPwd, AppUrl) {
 
         var Member = function(){};
 
@@ -613,14 +551,14 @@ angular.module('starter.services', ['starter.factory'])
 
             //获取会员信息
             getInfo: function() {
-                var url = AppConfig['host'] + AppConfig['member']['info'];
+                var url = AppUrl['host'] + AppUrl['member']['info'];
                 return Http.secretGet(url);
             },
 
             //修改密码
             modifyPwd: function(oldPwd, newPwd, sCallBack, eCallBack) {
                 EncryptPwd([oldPwd, newPwd], function(data) {
-                    var url = AppConfig['host'] + AppConfig['member']['modifyPwd'];
+                    var url = AppUrl['host'] + AppUrl['member']['modifyPwd'];
 
                     Http.post(url, {oldPassword: data[0], newPassword: data[1]})
                         .success(function(data){
@@ -643,7 +581,7 @@ angular.module('starter.services', ['starter.factory'])
              * @return {[type]}           [description]
              */
             sendCaptcha: function(email, sCallBack, eCallBack) {
-                var url = AppConfig['host']+ AppConfig['member']['captcha'],
+                var url = AppUrl['host']+ AppUrl['member']['captcha'],
                     params = {email: email};
                 Http.post(url ,params)
                     .success(function(data){
@@ -657,7 +595,7 @@ angular.module('starter.services', ['starter.factory'])
             },
 
             verifyEmail: function(email, captcha, sCallBack, eCallBack) {
-                var url = AppConfig['host'] + AppConfig['member']['verify'],
+                var url = AppUrl['host'] + AppUrl['member']['verify'],
                     params = {email: email, code: captcha};
                 Http.post(url ,params)
                     .success(function(data){
@@ -678,8 +616,8 @@ angular.module('starter.services', ['starter.factory'])
     })
 
     //到货通知
-    .factory('StockNoticeServices', function(Http) {
-        var aRootUrl = AppConfig['stocknotify'];
+    .factory('StockNoticeServices', function(Http, AppUrl) {
+        var aRootUrl = AppUrl['stocknotify'];
         return {
             /**
              * 注册到货通知
@@ -687,7 +625,7 @@ angular.module('starter.services', ['starter.factory'])
              * @returns {*}
              */
             fRegister: function(nId) {
-                var sUrl = AppConfig['host'] + aRootUrl['register'],
+                var sUrl = AppUrl['host'] + aRootUrl['register'],
                     params = {id: nId};
                 return Http.post(sUrl, params);
             },
@@ -712,12 +650,12 @@ angular.module('starter.services', ['starter.factory'])
     })
 
     //商品收藏
-    .factory('FavoriteServices', function(Http) {
+    .factory('FavoriteServices', function(Http, AppUrl) {
         return {
             isLoad : false,
             //获取标签列表
            getTagList: function() {
-               return Http.secretGet(AppConfig['host'] + AppConfig['favorite']['tagList']);
+               return Http.secretGet(AppUrl['host'] + AppUrl['favorite']['tagList']);
            },
 
             /*
@@ -732,7 +670,7 @@ angular.module('starter.services', ['starter.factory'])
                     tag: sTag
                 };
 
-                return Http.post(AppConfig['host'] + AppConfig['favorite']['add'], params);
+                return Http.post(AppUrl['host'] + AppUrl['favorite']['add'], params);
             },
             /*
                 获取收藏列表
@@ -746,7 +684,7 @@ angular.module('starter.services', ['starter.factory'])
                     pageNumber: pageNumber || 1,
                     pageSize: pageSize || 20
                 }
-                var sUrl = AppConfig['host'] + AppConfig['favorite']['list'];
+                var sUrl = AppUrl['host'] + AppUrl['favorite']['list'];
                 for (var key in params ) {
                     sUrl += !~sUrl.search(/\?/) ? '?' :'&';
                     sUrl += key + '=' + params[key];
@@ -759,7 +697,7 @@ angular.module('starter.services', ['starter.factory'])
                 @params sId string 商品id 1,1,1
              */
             del: function(tagId, sId) {
-                var sUrl = AppConfig['host'] + AppConfig['favorite']['del'],
+                var sUrl = AppUrl['host'] + AppUrl['favorite']['del'],
                     params = {tagId: tagId, ids: sId};
                 return Http.post(sUrl, params);
             },
@@ -769,10 +707,10 @@ angular.module('starter.services', ['starter.factory'])
     })
 
     //密码加密
-    .factory('EncryptPwd',  function($http, $rootScope){
+    .factory('EncryptPwd',  function($http, $rootScope, AppUrl){
         return function(aPwd, callback) {
 
-            var url = AppConfig['host'] + AppConfig['login']['publicKey'];
+            var url = AppUrl['host'] + AppUrl['login']['publicKey'];
 
             $http.get(url)
                 .success(function(data){
@@ -795,8 +733,8 @@ angular.module('starter.services', ['starter.factory'])
         }
     })
     //促销
-    .factory('ActivityServices', function(Http) {
-        var sUrl = AppConfig['host'] + AppConfig['activity']['home'];
+    .factory('ActivityServices', function(Http, AppUrl) {
+        var sUrl = AppUrl['host'] + AppUrl['activity']['home'];
         return {
             get: function() {
                 return Http.get(sUrl);
