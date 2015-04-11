@@ -145,11 +145,22 @@ angular.module('starter.factory', [])
                 else if (status == 403) {
                     $state.go('login');
                 }
-                else if (status == 500) {
-                    $ionicPopup.alert({title: data.error});
-                    if (handle.error) {
-                        handle.error(data);
-                    }
+                else if (status == 500 || status ==400 ) {
+
+                    var confirm=  $ionicPopup.confirm({
+                        title: data.error,
+                        cancelText: '取消', // String (default: 'Cancel'). The text of the Cancel button.
+                        okText: '重试' // String (default: 'OK'). The text of the OK button.
+                    });
+                    confirm.then(function(res) {
+                        if (res) {
+                             if (handle.error) {
+                                 handle.error(data);
+                             }
+                        } else {
+
+                        }
+                    })
                 }
             },
             finally: function(data, config, handle) {

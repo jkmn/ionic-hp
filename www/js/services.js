@@ -15,8 +15,6 @@ angular.module('starter.services', ['starter.factory', 'starter.appConfig'])
             },
 
             getCategoryById: function(id, handle) {
-                //params.data = {parentId: id};
-                //return Http.get(url+'?parentId=' + id, {cache: true});
                 return HttpFactory({
                     url: url,
                     data: {parentId: id},
@@ -27,7 +25,7 @@ angular.module('starter.services', ['starter.factory', 'starter.appConfig'])
         }
     })
     //商品列表
-    .factory('GoodsListServices', function(Http, AppUrl) {
+    .factory('GoodsListServices', function(Http, AppUrl, HttpFactory) {
 
             var url = {
                 def: AppUrl['host'] + AppUrl['goods']['list'],
@@ -104,27 +102,41 @@ angular.module('starter.services', ['starter.factory', 'starter.appConfig'])
 
 
             //下一页
-            List.prototype.nextPage = function(){
+            List.prototype.nextPage = function(handle){
                 if (this.isLoad ) return false;
                 this.isLoad = true;
                 var sURl = this.createUrl();
 
-                return Http.secretGet(sURl, {cache: true})
-                    .success(function(data){
-                        this.item  = this.item.concat(data.pager.list);
-                        this.isLoad = false;
-                        this.where.page += 1;
-                        this.maxPage = data.pager.pageCount;
-                        this.loadFilter(data.selectorMap);
-                    }.bind(this))
-                    .error(function(data, status){
-                        if (status == 0) {
-                            this.isLoad = true;
-                        } else {
-                            this.isLoad = false;
-                        }
-                    }.bind(this));
+                HttpFactory({
+                    url: sURl,
+                    cache: true
+                }, handle)
+
+                // return Http.secretGet(sURl, {cache: true})
+                //     .success(function(data){
+                //         this.item  = this.item.concat(data.pager.list);
+                //         this.isLoad = false;
+                //         this.where.page += 1;
+                //         this.maxPage = data.pager.pageCount;
+                //         this.loadFilter(data.selectorMap);
+                //     }.bind(this))
+                //     .error(function(data, status){
+                //         if (status == 0) {
+                //             this.isLoad = true;
+                //         } else {
+                //             this.isLoad = false;
+                //         }
+                //     }.bind(this));
             };
+
+
+            List.prototype.setData = function(data){
+                  this.item  = this.item.concat(data.pager.list);
+                  this.isLoad = false;
+                  this.where.page += 1;
+                  this.maxPage = data.pager.pageCount;
+                  this.loadFilter(data.selectorMap);
+            }
 
 
             //创建请求地址
@@ -238,31 +250,29 @@ angular.module('starter.services', ['starter.factory', 'starter.appConfig'])
         })
 
     //商品详情
-    .factory('ProductServices', function(Http, AppUrl) {
+    .factory('ProductServices', function(Http, AppUrl, HttpFactory) {
         return {
             /**
-             * 根据id获取订单信息
+             * 根据id获取商品信息
              * @param  {[int]} id [商品id]
              * @return $http
              */
-            getById: function(id) {
-                // console.log(url['product'].replace('{id}',id));
-                return Http.get(AppUrl['host'] + AppUrl['goods']['product'].replace('{id}',id));
+            getById: function(id, handle) {
+                HttpFactory({
+                    url: AppUrl['host'] + AppUrl['goods']['product'].replace('{id}',id)
+                }, handle)
             },
             /**
              * 获取商品有效期
              * @param  {[int]} nId [商品id]
              * @return {[object]}   $http
              */
-            fRecentlyBatch: function(nId, callback) {
+            fRecentlyBatch: function(nId, handle) {
                 var url = AppUrl['host'] + AppUrl['goods']['validity'];
-                return Http.get(url + nId , {cache: false})
-                    .success(function(data){
-                        if (data.type.toLowerCase() == 'success') {
-                            if (callback)
-                                callback(data.content.replace('<br/>',''));
-                        }
-                    });
+                HttpFactory({
+                    url: url + nId,
+                    cache: true
+                }, handle)
             }
         }
     })
@@ -274,7 +284,6 @@ angular.module('starter.services', ['starter.factory', 'starter.appConfig'])
                 return Http.secretGet(request, {cache: true});
             }
         }
-
     })
     //购物车
     .factory('CartServices', function(Http, $ionicPopup, AppUrl) {

@@ -1,22 +1,5 @@
 angular.module('starter.controllers', [])
     .controller('RootCtrl', function($scope, LoginServices, $state,$ionicHistory,LoginFactory, $ionicTabsDelegate, $ionicPopup,CartServices, FavoriteServices, ProductServices) {
-
-        //$scope.userIsLogin = function(sCallBack) {
-        //    LoginServices.loginStatus(function(){
-        //        if (sCallBack) sCallBack();
-        //    }, function() {
-        //        LoginFactory.openModal({
-        //            scope: $scope,
-        //            afterClose: function() {
-        //                //$ionicTabsDelegate.select(0);
-        //                $scope.$broadcast('afterClose', true);
-        //            },
-        //            successLogin: function() {
-        //                $scope.$broadcast('loginSuccess', true);
-        //            }
-        //        });
-        //    });
-        //}
         var oCart = null;
         //加入购物车
         $scope.fAddCart = function(item) {
@@ -104,13 +87,20 @@ angular.module('starter.controllers', [])
         $scope.doRefresh = function() {
             $scope.$broadcast('doRefresh' + $state.current.name,true);
         }
+        //获取有效期
         $scope.recentlyBatch = function(item) {
-            ProductServices.fRecentlyBatch(item.id, function(message) {
-                $ionicPopup.alert({title: message});
-            })
+            recentlyBatch(item);
         }
 
-
+        function recentlyBatch(item) {
+            ProductServices.fRecentlyBatch(item.id, {
+                success: function(data) {
+                    if (data.type.toLowerCase() == 'success') {
+                        $ionicPopup.alert({title: data.content.replace('<br/>','')});
+                    }
+                }
+            })
+        }
     })
 
     //分类
@@ -200,18 +190,17 @@ angular.module('starter.controllers', [])
         $scope.goodsList = oGoodsListServices;
         //加载更多
         $scope.nextPage = function() {
-           var h = oGoodsListServices.nextPage();
-            if (h)
-               h
-                   .error(function(data, status) {
-                       if (status == 0) {
-                           hasMore = false;
-                       }
-                   })
-                   .finally(function(){
-                       $scope.$broadcast('scroll.infiniteScrollComplete');
-                       $scope.$broadcast('scroll.refreshComplete');
-                });
+           var h = oGoodsListServices.nextPage({
+                success: function(data){
+                    oGoodsListServices.setData(data);
+                },
+                error: function(data){
+                    $scope.nextPage();
+                },
+                finally: function(){
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
+                }
+           });
         }
         var hasMore = true;
         $scope.hasMore = function() {
@@ -345,6 +334,7 @@ angular.module('starter.controllers', [])
 
     //商品
     .controller('ProductCtrl', function($scope,$rootScope, $state, $ionicPopover, $state,$ionicActionSheet, $stateParams, $ionicPopup, CartServices, LoginFactory, ProductServices, LoginServices, MemberServices, StockNoticeServices, FavoriteServices) {
+
         var nId = parseInt($stateParams.id),
             oCart = new CartServices(),
             oMember = null;
@@ -366,16 +356,15 @@ angular.module('starter.controllers', [])
             request();
         })
 
-        $scope.$on('doRefresh'+ $state.current.name ,function() {
-            request().finally(function() {
-                $scope.$broadcast('scroll.refreshComplete');
-            })
-        })
+        // $scope.$on('doRefresh'+ $state.current.name ,function() {
+        //     request().finally(function() {
+        //         $scope.$broadcast('scroll.refreshComplete');
+        //     })
+        // })
         $scope.showSubHeader = false;
 
         $scope.toggleSubTabs = function($event) {
             $scope.showSubHeader = !$scope.showSubHeader;
-            //$scope.popover.show($event);
         }
 
 
@@ -395,7 +384,6 @@ angular.module('starter.controllers', [])
         //到货通知
         $scope.arrivalNotice =  function() {
             //验证用户是否登陆过
-            //$scope.userIsLogin(function() {
                 //step1 验证用户邮箱是否有维护
                 if (!oMember) {
                     oMember = new MemberServices();
@@ -431,7 +419,6 @@ angular.module('starter.controllers', [])
                                 })
                         }
                     })
-            //})
 
         }
 
@@ -439,10 +426,17 @@ angular.module('starter.controllers', [])
         //请求数据
         request();
         function request() {
-            return ProductServices.getById(nId)
-                .success(function (data) {
+             ProductServices.getById(nId, {
+                success: function(data){
                     $scope.product = data;
-                })
+                },
+                timeout: function(){
+                    request();
+                },
+                error: function(){
+                    request();
+                }
+            })
         }
 
     })
