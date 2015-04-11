@@ -1,0 +1,30 @@
+<ion-view view-title="分类" hide-back-button="true" has-tabs >
+	<ion-nav-buttons side="right">
+		<a class="button" ui-sref="tab.search">
+			<i class="icon ion-search"></i>
+		</a>
+	</ion-nav-buttons>
+  <ion-content>
+      <ion-refresher
+              pulling-text="下拉刷新"
+              on-refresh="doRefresh()">
+      </ion-refresher>
+
+    <ion-list>
+        <div ng-repeat="group in category">
+            <ion-item class="item-stable category-heade"
+                      ng-click="showChild(group)"
+                      ng-class="{active: isGroupShown(group)}" >
+                <i class="icon" ng-class="isGroupShown(group) ? 'ion-minus' : 'ion-plus'"></i>
+                &nbsp;
+                {{group.name}}
+            </ion-item>
+            <ion-item ui-sref="goodsList({id: item.id})"" class="item-accordion category-item col col-50"  ng-repeat="(key,item) in gGroupChild(group)" ng-show="isGroupShown(group)" >
+                {{item.name}}
+            </ion-item>
+            <div style="clear: both"></div>
+        </div>
+    </ion-list>
+
+  </ion-content>
+</ion-view>

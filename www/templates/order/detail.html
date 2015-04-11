@@ -1,0 +1,64 @@
+<ion-modal-view view-title="订单详情">
+
+    <ion-header-bar class="bar-positive">
+
+        <h2 class="title">订单详情</h2>
+        <button class="button" ng-click="colseDetailModal()">取消</button>
+    </ion-header-bar>
+
+    <div class="bar bar-subheader" ng-init="isOrderDetail=true">
+        <div class="button-bar">
+            <a class="button" ng-class="{'button-positive': isOrderDetail}" ng-click="isOrderDetail = true;scrollToTop();">订单详情</a>
+            <a class="button" ng-class="{'button-positive': !isOrderDetail}" ng-click="isOrderDetail = false;scrollToTop();">订单日志</a>
+        </div>
+    </div>
+
+    <ion-content class="has-subheader">
+
+        <div class="list card" ng-show="isOrderDetail" ng-repeat="(key, item) in getOrderItemList()">
+            <div class="item row item-divider" >
+                <span class="col col-25">商品名称</span>
+                <a class="col" ng-click=""> {{item.productName}}</a>
+            </div>
+            <div class="item row">
+                <span class="col col-25">生产厂家</span>
+                <span class="col"> {{item.manufacturer}}</span>
+            </div>
+            <div class="item row item-divider" >
+                <span class="col col-25">批号</span>
+                <span class="col"> {{item.productCode}}</span>
+            </div>
+            <div class="item row">
+                <span class="col col-25">生产日期</span>
+                <span class="col"> {{item.manufacturerDate}}</span>
+            </div>
+            <div class="item row item-divider" >
+                <span class="col col-25">有效期</span>
+                <span class="col"> {{item.validDate}}</span>
+            </div>
+            <div class="item row">
+                <span class="col col-25">单价</span>
+                <span class="col price"> {{item.salePrice | currency: "￥"}}</span>
+            </div>
+            <div class="item row item-divider" >
+                <span class="col col-25">数量</span>
+                <span class="col"> {{item.quantity}}</span>
+            </div>
+            <div class="item row">
+                <span class="col col-25">小计</span>
+                <span class="col price"> {{ item.quantity * item.salePrice | currency: "￥" }}</span>
+            </div>
+        </div>
+
+        <div class="list card order-log" ng-repeat="item in getOrderLog()" ng-show="!isOrderDetail">
+            <div class="item item-divider" ng-bind="item.operatorType">
+            </div>
+            <div class="item item-text-wrap" ng-bind="item.logText">
+            </div>
+            <div class="item item-divider" ng-bind="item.createDate"></div>
+        </div>
+
+    </ion-content>
+
+
+</ion-modal-view>

@@ -1,0 +1,52 @@
+<ion-view view-title="促销活动" hide-tabs>
+    <ion-nav-buttons side="left">
+        <button ng-click="$ionicGoBack($event)" class="button back-button buttons button-clear header-item" style=""><i class="icon ion-android-arrow-back"></i> </button>
+    </ion-nav-buttons>
+    <ion-content >
+        <ion-list ng-repeat="item in list.activity">
+            <ion-item class="item-divider item-icon-right">
+                <a ui-sref="activityList({activityId: item.activityId})" class="icon ion-ios-arrow-forward"></a>
+                <span ng-bind="item.name"></span>
+            </ion-item>
+            <ion-item class="item-text-wrap action-list-scroll">
+                <ion-scroll class="scroll-list" zooming="false" direction="x" style="width: 100%; height: 10em">
+                    <ul class="action-list" style="width:{{item.goodsList.length * 10.5}}em ">
+                        <li ng-repeat="product in item.goodsList">
+                            <a ui-sref="product({id: product.id})">
+                                <div class="img">
+                                    <img ng-src="{{product.image_default | setImgSize: 96:60}}" style="width:8em;height:5em"/>
+                                </div>
+                                <p ng-bind="product.name"></p>
+                                <p>采购价：<span class="price" ng-bind="product.bigPrice | currency:'￥'"></span></p>
+                                <p ng-bind="product.manufacturer"></p>
+                            </a>
+                        </li>
+                    </ul>
+                </ion-scroll>
+            </ion-item>
+        </ion-list>
+
+        <ion-list ng-repeat="item in list.promotion">
+            <ion-item class="item-divider item-icon-right">
+                <a ui-sref="promotionList({promotion: item.access})" class="icon ion-ios-arrow-forward"></a>
+                <span ng-bind="item.name"></span>
+            </ion-item>
+            <ion-item class="item-text-wrap action-list-scroll">
+                <ion-scroll class="scroll-list" zooming="false" direction="x" style="width: 100%; height: 10em">
+                    <ul class="action-list" style="width:{{item.goodsList.length * 10.5}}em ">
+                        <li ng-repeat="product in item.goodsList">
+                            <a ui-sref="product({id: product.id})">
+                                <div class="img">
+                                    <img ng-src="{{product.image_default | setImgSize: 96:60}}" style="width:8em;height:5em"/>
+                                </div>
+                                <p ng-bind="product.name"></p>
+                                <p>采购价：<span class="price" ng-bind="product.bigPrice | currency:'￥'"></span></p>
+                                <p ng-bind="product.manufacturer"></p>
+                            </a>
+                        </li>
+                    </ul>
+                </ion-scroll>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

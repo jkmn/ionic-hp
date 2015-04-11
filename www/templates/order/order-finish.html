@@ -1,0 +1,27 @@
+<ion-view view-title="完成订单" hide-back-button=true hide-tabs>
+  <ion-content>
+    <ion-list>
+      <ion-item>
+    		<h2>订单编号:</h2>
+    		<p ng-bind="oOrder.aDetail.orderNo"></p>
+      </ion-item>
+      <ion-item>
+    		<h2>下单时间:</h2>
+    		<p ng-bind="oOrder.aDetail.createDate"></p>
+      </ion-item>
+        <ion-item>
+            <h2>送达地址:</h2>
+            <p ng-bind="oOrder.aDetail.address"></p>
+        </ion-item>
+        <ion-item>
+            <h2>订单金额:</h2>
+            <p ng-bind="oOrder.aDetail.totalAmount | currency: '￥'" class="price"></p>
+        </ion-item>
+    </ion-list>
+
+      <div class="row">
+          <a class="button col button-small" ui-sref="tab.category">继续购物</a>
+          <a href="" class="button col button-small" ui-sref="tab.member">我的订单</a>
+      </div>
+  </ion-content>
+</ion-view>

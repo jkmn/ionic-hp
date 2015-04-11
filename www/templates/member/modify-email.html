@@ -1,0 +1,20 @@
+<ion-view view-title="修改邮箱" hide-tabs>
+
+    <ion-content>
+
+        <ion-list>
+            <ion-item ng-show="error" ng-bind="error"></ion-item>
+            <ion-item class="item-input">
+                <input type="email" placeholder='请输入邮箱地址' ng-model="params.email" ng-disabled="isSend"/>
+            </ion-item>
+            <ion-item class="item-input">
+                <input type="text" placeholder="验证码" ng-model="params.code"/>
+            </ion-item>
+        </ion-list>
+
+        <button class="button button-block" ng-disabled="isSend"  ng-bind="codeBtnText" ng-click='fSendCode($event)'></button>
+        <button class="button button-block button-positive" ng-click='fChange()'>修改</button>
+
+    </ion-content>
+
+</ion-view>

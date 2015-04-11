@@ -1,0 +1,10 @@
+<div class="list">
+
+    <label class="item item-input item-select">
+        <div class="input-label">
+           标签
+        </div>
+        <select ng-model="rootSelected.tag" ng-options="(item.tag | default: '默认标签') for item in rootTagList"></select>
+    </label>
+
+</div>

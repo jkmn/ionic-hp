@@ -1,0 +1,56 @@
+<ion-view view-title="购物车" hide-tabs>
+  <ion-nav-buttons side="left">
+	<button ng-click="$ionicGoBack($event)" class="button back-button buttons button-clear header-item" style=""><i class="icon ion-android-arrow-back"></i> </button>
+  </ion-nav-buttons>
+
+  <ion-nav-buttons side="right">
+      <button class='button' ng-class="{'button-assertive': isEdit}" ng-click='toggle()' ng-bind='isEdit? "完成" : "编辑"'>
+          编辑
+      </button>
+  </ion-nav-buttons>
+
+  <ion-content class='customer-footer'>
+      <ion-refresher
+              pulling-text="下拉刷新"
+              on-refresh="doRefresh()">
+      </ion-refresher>
+
+	<ion-list  class='cart-list'>
+	  <ion-item class='item-checkbox cart-item' goods-code = "{{item.goods.code}}" ng-repeat="item in cart.list">
+		<label class="checkbox cart-checkbox checkbox-assertive">
+	       <input type="checkbox"  ng-checked="" ng-model="item.isChecked" ng-click="checkedItem(item)">
+	    </label>
+	    <h2 ui-sref="product({id:item.goods.id})" ng-bind="item.goods.name"></h2>
+	    <p ng-bind="item.goods.manufacturer"></p>
+    	<p ng-bind="item.goods.spec"></p>
+          <p ng-hide='isEdit' on-tap='openNumPanel(item)' >
+              数量: <span ng-bind="item.quantity"></span>
+              <i class='icon ion-edit'></i>
+          </p>
+          <p>
+              单价: <span class="price" ng-bind="item.goods.smallPrice | currency: '￥'"></span>
+              小计: <span class="price" ng-bind="(item.goods.smallPrice * item.quantity) | currency: '￥'"></span>
+          </p>
+
+          <div class='modify-num-box row' ng-show='isEdit'>
+              <i class='button icon ion-plus button-small' ng-click="pulsNum(item)"></i>
+              <input type="text"  class="cart-number" ng-change="changeCartNum(item)" ng-model='item.quantity'>
+              <i class='button icon ion-minus button-small' ng-click="minusNum(item)"></i>
+          </div>
+          <ion-option-button class="button-positive" ng-click="addFavorite(item.goods)">收藏</ion-option-button>
+		<ion-option-button class="button-assertive" ng-click="deleteCartItem(item, $index)">删除</ion-option-button>
+	  </ion-item>
+      <ion-item ng-if="isFinishLoad && !cart.list.length" style='text-align: center'> 购物车里没有商品</ion-item>
+	</ion-list>
+
+
+  </ion-content>
+
+</ion-view>
+<ion-footer-bar class="bar-positive bottom cart-footer">
+	<ion-checkbox ng-model="isChecked" ng-click="checkedAll()"  class='checkbox-assertive'>
+        总价: <span ng-bind="totalAmount | currency: '￥'"></span>
+    </ion-checkbox>
+
+    <button class='button button-assertive create-order' ng-click="createOrder()" ng-hide="isEdit">生成订单</button>
+</ion-footer-bar>

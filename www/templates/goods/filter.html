@@ -1,0 +1,28 @@
+<ion-modal-view view-title="筛选">
+    <ion-header-bar class="bar-positive">
+        <button class="button" ng-click="closeFilterModal()">取消</button>
+        <h2 class="title">筛选</h2>
+        <div class="buttons">
+            <button class="button" ng-click="resetFilter()">重置</button>
+            <button class="button" ng-click="sureFilter()">确定</button>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <ion-list>
+            <!--<ion-item class="item-toggle">-->
+                <!--显示有货-->
+                <!--<label class="toggle toggle-assertive">-->
+                    <!--<input type="checkbox">-->
+                    <!--<div class="track">-->
+                        <!--<div class="handle"></div>-->
+                    <!--</div>-->
+                <!--</label>-->
+            <!--</ion-item>-->
+            <ion-item class="item-icon-right" ng-click='openFilterListModal(item)' ng-repeat="item in tempFilter" ng-show="item.list.length">
+                <i class="icon ion-ios-arrow-right "></i>
+                <span ng-bind="item.name"></span>
+                <span class="filter-list-detail" ng-bind="item.selected ? item.selected : '全部'"></span>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-modal-view>

@@ -1,0 +1,58 @@
+<ion-view view-title="我的订单" hide-tabs>
+    <div class="bar bar-subheader order-filter">
+        <div class="button-bar">
+            <a class="button" ng-class="{'activity': order.where.status==key}" ng-click="orderFilter(key)" ng-repeat="(key,item) in orderStatus" ng-bind="item"></a>
+        </div>
+    </div>
+
+    <ion-content class="has-subheader order-list">
+        <ion-refresher
+                pulling-text="下拉刷新"
+                on-refresh="doRefresh()">
+        </ion-refresher>
+        <div class="card orderList" ng-repeat="(key,item) in getList()" ng-init= 'orderDetail = item.orderItemList.splice(0,3)'>
+            <div class="item item-divider list-header">
+                <span class="col-34" ng-bind='item.orderStatus | orderStatus'></span>
+                <span ng-bind="item.orderNo" class="col-66 padding-right"></span>
+            </div>
+            <div class="item item-text-wrap">
+                <ion-list>
+                    <ion-item ui-sref='product({id: it.goodsId})' ng-repeat="it in orderDetail" class=" orderDetail">
+                        <div class="row">
+                            <div class="col col-75">
+                                <h2 ng-bind='it.productName'></h2>
+                            </div>
+                            <div class="col col-25">
+                                 <p ng-bind='it.specification'></p>
+                            </div>
+                        </div>
+                        <p>数量: <span ng-bind='it.quantity'></span></p>
+                        <p class="ui-li-aside price"><strong class="price" ng-bind='it.salePrice | currency: "￥"'></strong></p>
+                    </ion-item>
+                </ion-list>
+            </div>
+            <div class="item item-divider order-list-heji">
+               实付款:<i class="price" ng-bind='item.totalAmount | currency: "￥"'></i>
+            </div>
+            <div class="item item-divider order-list-action">
+                <button class="button button-small" ng-click="openDetailModal(item)">订单详情</button>
+                <a ui-sref="orderCreate({orderNo: item.orderNo})" class="button button-small" ng-if='item.orderStatus == "waitBuyerConfirmOrder"'>确认订单</a>
+                <button class="button button-small button-outline button-assertive" ng-if='item.orderStatus == "waitBuyerConfirmOrder"' ng-click='fCancelOrder(item)'>取消订单</button>
+                <button class="button button-small button-outline button-energized" ng-if='item.orderStatus == "waitBuyerConfirmGoods"' ng-click="fFinishOrder(item)">确认收货</button>
+                <button class="button button-small button-outline button-assertive" ng-if='item.orderStatus == "tradeFinished" || item.orderStatus == "tradeClosed"' ng-click="fDeleteOrder(item, key)">删除订单</button>
+                <button class="button button-small button-outline button-assertive" ng-if='item.orderStatus == "tradeFinished"'>申请退货</button>
+            </div>
+        </div>
+        <ion-list>
+            <ion-item style="text-align: center" ng-if="!hasMore()" ng-bind="getList().length > 0 ? '已全部加载': '没有订单'"></ion-item>
+        </ion-list>
+
+        <ion-infinite-scroll
+                ng-if="hasMore()"
+                on-infinite="nextPage()"
+                distance="1%">
+        </ion-infinite-scroll>
+
+
+    </ion-content>
+</ion-view>

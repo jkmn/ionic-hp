@@ -1,0 +1,33 @@
+<ion-header-bar class="bar-positive item-input-inset search-header">
+    <button class="button button-clear search-back" ng-click='$ionicGoBack($event)'>
+       返回
+    </button>
+  <label class="item-input-wrapper">
+    <i class="icon ion-ios-search placeholder-icon"></i>
+    <input type="search" placeholder="商品名称" ng-model="keyword">
+  </label>
+	<button class="button button-clear" ng-click="search()">
+        搜索
+	</button>
+</ion-header-bar>
+<ion-view view-title="搜索" hide-nav-bar=true hide-tabs>
+  <ion-content padding=true>
+      <ion-list>
+          <ion-item class='item-divider' ng-if="isNotFind()">
+              搜索商品不存在
+          </ion-item>
+          <ion-item href="#/goodsList/keyword/{{item.name | urlencode}}" ng-repeat="item in getSearchList()" ng-click="addHistory(item)">
+                <span ng-bind="item.name"></span>
+          </ion-item>
+      </ion-list>
+   	<ion-list ng-show="showHistory()">
+   	  <ion-item class='item-divider'>
+   			历史记录
+   	  </ion-item>
+   	  <ion-item  href="#/goodsList/keyword/{{item.name}}" ng-repeat="item in getHistoryList()" >
+          <span ng-bind="item.name | urldecode"></span>
+      </ion-item>
+        <ion-item class="button button-block button-positive" ng-click="clearHistory()">清空历史记录</ion-item>
+   	</ion-list>
+  </ion-content>
+</ion-view>

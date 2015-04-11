@@ -1,0 +1,32 @@
+<ion-view view-title="会员中心" hide-back-button="true" has-tabs>
+  <ion-content>
+        <div class="member-header">
+             <div class="member-photo"></div>
+            <div class="member-name" ng-bind="member.customerBean.name"></div>
+        </div>
+
+   		<ion-list>
+   		  <ion-item class='item-icon-left' ui-sref="tab.orderList">
+   		  	<i class='icon ion-ios-folder'></i>
+   				我的订单
+   		  </ion-item>
+   		  <ion-item class='item-icon-left' ui-sref="tab.favorite">
+   		  	<i class='icon ion-heart'></i>
+   				我的收藏
+   		  </ion-item>
+            <ion-item class='item-icon-left no-right-padding' ui-sref="tab.modifyemail">
+                <i class='icon ion-email'></i>
+                <span>修改邮箱</span>
+                <span ng-bind="member.email" class="member-email"></span>
+            </ion-item>
+   		  <ion-item class='item-icon-left' ui-sref="tab.modifypwd">
+   		  	<i class='icon ion-compose'></i>
+   				修改密码
+   		  </ion-item>
+   		</ion-list>
+
+
+      <button class="button button-full button-assertive" ng-click="logOut()">退出登陆</button>
+
+  </ion-content>
+</ion-view>

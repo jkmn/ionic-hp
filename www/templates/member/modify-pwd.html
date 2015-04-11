@@ -1,0 +1,18 @@
+<ion-view view-title="修改密码" hide-tabs>
+    <ion-content>
+        <ion-list>
+            <ion-item ng-show="error" ng-bind="error"></ion-item>
+            <ion-item class="item-input">
+                <input type="password" placeholder="原始密码" ng-model="pwd.opwd"/>
+            </ion-item>
+            <ion-item class="item-input">
+                <input type="password" placeholder='新密码' ng-model="pwd.npwd"/>
+            </ion-item>
+            <ion-item class="item-input">
+                <input type="password" placeholder="重复新密码" ng-model="pwd.apwd"/>
+            </ion-item>
+        </ion-list>
+
+        <button class="button button-full button-positive" ng-click="modifyPwd()">修改</button>
+    </ion-content>
+</ion-view>

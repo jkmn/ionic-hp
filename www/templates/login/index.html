@@ -1,0 +1,23 @@
+<ion-modal-view view-title="登陆" cache-view="true">
+    <ion-header-bar class="bar-positive">
+        <h1 class="title">用户登录</h1>
+        <button class="button" ng-click='closeLoginModal()'>取消</button>
+    </ion-header-bar>
+  <ion-content class="padding" scroll="false">
+   	<ion-list>
+        <ion-item ng-show="loginError" ng-bind="loginError"></ion-item>
+   	  <ion-item class='item-input'>
+   		 <input type="text" placeholder="用户名" ng-model="user.username"/>
+   	  </ion-item>
+   	  <ion-item class='item-input'>
+   		 <input type="password" placeholder="密码" ng-model="user.password" />
+   	  </ion-item>
+   	</ion-list>
+
+   	<button class="button button-block button-positive" ng-click="userLogin()">
+  		登陆
+	</button>
+	<a href="" class='forget-password'>忘记密码?</a>
+	<div style='clear:both;'></div>
+  </ion-content>
+</ion-modal-view>

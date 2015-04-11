@@ -1,0 +1,98 @@
+<ion-view view-title="商品列表" hide-tabs hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button ng-click="$ionicGoBack($event)" class="button back-button buttons button-clear header-item" style=""><i class="icon ion-android-arrow-back"></i> </button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <!--<a class="button" ui-sref="tab.search">-->
+            <!--<i class="icon ion-search"></i>-->
+        <!--</a>-->
+        <button class="button button-clear button-small" ng-click="toggleSubHeader();">
+            <i class="icon ion-ios-more"></i>
+        </button>
+        <button class="button button-clear" ng-click="openFilterModal()">
+            筛选
+        </button>
+    </ion-nav-buttons>
+    <div class="bar bar-subheader" ng-show="showSubHeader">
+        <div class="tabs">
+            <a class="tab-item" ui-sref='tab.category'>
+                <i class="icon ion-ios-home"></i>
+                首页
+            </a>
+            <a class="tab-item" ui-sref='tab.search'>
+                <i class="icon ion-search"></i>
+                搜索
+            </a>
+            <a class="tab-item" ui-sref="tab.cart">
+                <i class="icon ion-ios-cart"></i>
+            </a>
+        </div>
+    </div>
+    <ion-content>
+        <ion-refresher
+                pulling-text="下拉刷新"
+                on-refresh="doRefresh()">
+        </ion-refresher>
+        <div class="list" >
+            <div class="item item-button-right goods-list" ng-repeat="item in goodsList.item">
+                <ul class="ico-list">
+                    <!--<li class="list-ico xq" on-tap="recentlyBatch(item)"></li>-->
+                    <li class="list-ico cx" ng-if="item.promotion"></li>
+                    <li class='list-ico yb' ng-if="item.medicalInsuranceType">
+                </ul>
+                <a class="item-content"  ui-sref='product({id: item.id})'>
+                    <h2 >
+                        <span ng-bind="item.name"></span>
+                    </h2>
+                    <p  class="row" ng-bind="item.manufacturer">
+                    </p>
+                    <p class="row">
+                    <span class="col">
+                        中包装: <i ng-bind="item.middlePackageAmount"></i><i ng-bind="item.packingUnit"></i>
+                    </span>
+                    <span class="col">
+                        大包装: <i ng-bind="item.bigPackageAmount"></i><i ng-bind="item.packingUnit"></i>
+                    </span>
+                    </p>
+                    <p class="row">
+                    <span class="col">
+                        库存: <i ng-bind="!item.stock ? '暂无库存' : (item.stock >= 100 ? '有货' : item.stock)  "></i>
+                    </span>
+                    <span class="col">
+                        规格: <i ng-bind="item.spec"></i>
+                    </span>
+                    </p>
+                    <p class="row">
+                         <span class="col">
+                        价格: <i class="price" ng-bind="item.smallPrice? (item.smallPrice| currency: '￥') : '登陆可见'"></i>
+                    </span>
+                         <span class="col" ng-if="item.middlePrice && item.middlePrice != item.smallPrice">
+                        中包价: <i class="price" ng-bind="item.middlePrice| currency: '￥'"></i>
+                    </span>
+                         <span class="col" ng-if="item.bigPrice && item.bigPrice != item.middlePrice">
+                        大包价: <i class="price" ng-bind="item.bigPrice| currency: '￥'"></i>
+                    </span>
+                    </p>
+                </a>
+                <button class="button button-stable query-validity-button" ng-if="item.stock"  ng-click="recentlyBatch(item)">
+                    效
+                </button>
+                <button class="button button-assertive add-cart-button" ng-if="item.stock" ng-click="fAddCart(item)">
+                    <i class="icon ion-android-cart"></i>
+                    <!--加<br/>入<br/>购<br/>物<br/>车-->
+                </button>
+                <button class="button button-stable add-cart-button " ng-class="{'no-stock': !item.stock}" disabled ng-if="!item.stock">
+                    <!--<i class="icon ion-android-cart"></i>-->
+                    暂<br/>无<br/>库<br/>存
+                </button>
+            </div>
+            <div class="item" style="text-align: center" ng-if="!hasMore()" ng-bind="goodsList.item.length > 0 ? '已全部加载': '没有商品'"></div>
+        </div>
+
+        <ion-infinite-scroll
+                ng-if="hasMore()"
+                on-infinite="nextPage()"
+                distance="1%">
+        </ion-infinite-scroll>
+    </ion-content>
+</ion-view>

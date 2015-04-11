@@ -1,0 +1,122 @@
+<ion-view hide-tabs view-title="商品详情" hide-back-button="true">
+    <ion-nav-buttons side="left">
+        <button ng-click="$ionicGoBack($event)" class="button back-button buttons button-clear header-item" style=""><i class="icon ion-android-arrow-back"></i> </button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <button class="button button-clear" ng-click="toggleSubTabs()">
+            <i class="icon ion-ios-more"></i>
+        </button>
+    </ion-nav-buttons>
+    <div class="bar bar-subheader" ng-show="showSubHeader">
+        <div class="tabs">
+            <a class="tab-item" ui-sref='tab.category'>
+                <i class="icon ion-ios-home"></i>
+                首页
+            </a>
+            <a class="tab-item" ui-sref='tab.search'>
+                <i class="icon ion-search"></i>
+                搜索
+            </a>
+            <a class="tab-item" ui-sref="tab.cart">
+                <i class="icon ion-ios-cart"></i>
+            </a>
+        </div>
+    </div>
+  <ion-content class="has-footer customer-footer ">
+      <ion-refresher
+              pulling-text="下拉刷新"
+              on-refresh="doRefresh()">
+      </ion-refresher>
+
+      <ion-slide-box class="goods-slide-banner">
+          <ion-slide ng-repeat="image in product.image_files">
+              <img ng-src="{{image |setImgSize : 150: 150}}" alt=""/>
+          </ion-slide>
+      </ion-slide-box>
+
+      <div class="list card product-info">
+          <ion-item>
+              <h2 ng-bind="product.name"></h2>
+              <p  class="row">
+                  <span class="col" ng-bind="product.manufacturer"></span>
+                   <span class="col spec">
+                      规格: <i ng-bind="product.spec"></i>
+                  </span>
+              </p>
+              <p>
+                  商品编号: <span ng-bind="product.code"></span>
+              </p>
+              <p class="row">
+                    <span class="col">
+                        中包装: <i ng-bind="product.middlePackageAmount"></i><i ng-bind="product.packingUnit"></i>
+                    </span>
+                    <span class="col">
+                        大包装: <i ng-bind="product.bigPackageAmount"></i><i ng-bind="product.packingUnit"></i>
+                    </span>
+                    <!--<span class="col" >-->
+                        <!--可拆零 : <i ng-bind="product.isCustomerControlSale ? '是' : '否'"></i>-->
+                    <!--</span>-->
+              </p>
+              <p class="row">
+                    <span class="col">
+                        库存: <i ng-bind="!product.stock ? '暂无库存' : (product.stock >= 100 ? '有货' : product.stock)  "></i>
+                    </span>
+
+              </p>
+              <p class="row">
+                        <span class="col">
+                        价格: <i class="price" ng-bind="product.smallPrice? (product.smallPrice | currency: '￥') : '登陆可见'"></i>
+                    </span>
+                   <span class="col" ng-if="product.middlePrice && product.middlePrice != product.smallPrice">
+                        中包价: <i class="price" ng-bind="product.middlePrice| currency: '￥'"></i>
+                    </span>
+                         <span class="col" ng-if="product.bigPrice && product.bigPrice != product.middlePrice">
+                        大包价: <i class="price" ng-bind="product.bigPrice| currency: '￥' "></i>
+                    </span>
+              </p>
+          </ion-item>
+      </div>
+      <div class="list card" ng-show="product.promotion">
+          <div class="item item-divider ">
+              促销活动
+          </div>
+          <div class="item item-text-wrap">
+              <p>
+                  开始时间:&nbsp;&nbsp;&nbsp;<span ng-bind="product.promotion.startDate"></span>
+              </p>
+              <p>
+                  结束时间:&nbsp;&nbsp;&nbsp;<span ng-bind="product.promotion.endDate"></span>
+              </p>
+              <div ng-bind="product.promotion.content"></div>
+          </div>
+      </div>
+
+      <div class="list card">
+          <ion-item class="item-divider item-icon-right">
+              商品说明书
+          </ion-item>
+          <div ng-repeat='(key,item) in product.introduction' ng-if='key != "id"'>
+             <ion-item class="item-divider">[<span ng-bind="key | productIntoKeyToCh"></span>]</ion-item>
+            <ion-item class="item-text-wrap" ng-bind='item | default: "暂无"'>
+          </div>
+      </div>
+  </ion-content>
+
+
+</ion-view>
+<div class="tabs tabs-icon-left cb-has-tabs goods-footer" >
+    <a class="tab-item calm-bg col-30" ng-click="addFavorite(product)">
+        <i class="icon ion-star"></i>
+        收藏
+    </a>
+    <a class="tab-item assertive-bg col-50" ng-click="fAddCart(product)" ng-show="product.stock">
+        <i class="icon ion-android-cart ion-android-cart"></i>
+        加入购物车
+    </a>
+    <a class="tab-item assertive-bg col-50" ng-show="!product.stock" ng-click="arrivalNotice()">
+        到货通知
+    </a>
+    <a class="tab-item stable-bg col-20 go-cart" ng-click="recentlyBatch(product)">
+        效期
+    </a>
+</div>

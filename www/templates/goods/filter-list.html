@@ -1,0 +1,23 @@
+<ion-modal-view>
+    <ion-header-bar class="bar-positive">
+        <button class="button" ng-click="closeFilterListModal()">取消</button>
+        <h1 class="title">生产厂家</h1>
+
+    </ion-header-bar>
+
+    <ion-content>
+
+        <ion-list>
+            <ion-item class="item-icon-left" ng-click="selectedFilter();">
+                全部
+            </ion-item>
+            <ion-item class="item-icon-left" ng-repeat="item in tempFilterList.list" ng-click="selectedFilter(item);">
+                <i class="icon " ng-class="{'ion-checkmark-round':item.isSelected}"></i>
+                <span ng-bind="item.name"></span>
+            </ion-item>
+        </ion-list>
+
+    </ion-content>
+
+
+</ion-modal-view>

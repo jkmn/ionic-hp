@@ -1,0 +1,52 @@
+<ion-view view-title="确定订单" hide-back-button=true hide-tabs>
+	<ion-nav-buttons side="left">
+        <button ng-click="$ionicGoBack($event)" class="button back-button buttons button-clear header-item" style=""><i class="icon ion-ios-arrow-back"></i> </button>
+	</ion-nav-buttons>
+  <ion-content class="has-footer customer-footer">
+     <ion-list class="order-create-list">
+       <ion-item ng-repeat="item in oOrder.aDetail.orderItemList">
+         <h2 ng-bind="item.productName"></h2>
+         <p class="row" style="padding:0">
+             <span class="col" ng-bind="item.manufacturer"></span>
+             <span class="col" ng-bind="item.specification" style="text-align: right"></span>
+         </p>
+         <p>
+             数量: <span ng-bind="item.quantity"></span>
+         </p>
+         <p class="row" style="padding:0">
+             <span class="col">单价: <span ng-bind="item.salePrice | currency: '￥'" class="price"></span></span>
+             <span class="col">小计: <span class="price" ng-bind="item.salePrice * item.quantity | currency: '￥'"></span></span>
+         </p>
+           <p>
+               <span>生产日期: <i ng-bind="item.manufacturerDate"></i></span>
+
+           </p>
+           <p>
+               <span>有效期: <i ng-bind="item.validDate"></i></span>
+           </p>
+         <ion-option-button ng-click="deleteItem(item, $index)" class="button-assertive" ng-click="deleteOrderItem(item)">删除</ion-option-button>
+       </ion-item>
+     </ion-list>
+
+     <div class="card">
+       <label class="item item-input item-stacked-label">
+      <span class="input-label">留言</span>
+        <input type="text" placeholder="请输入留言" ng-model='msg.orderMsg'>
+      </label>
+     </div>
+
+
+  </ion-content>
+</ion-view>
+<ion-footer-bar class="bar-positive bottom cart-footer order-create-footer row">
+    <div class ="col order-create-total">
+        <span >总价: <span ng-bind="oOrder.aDetail.totalAmount | currency : '￥'"></span></span>
+    </div>
+    <div class="buttons">
+        <a href="" class="button button-clear button-small order-create-cancel" ng-click="cancelOrder()">取消订单</a>
+        <button class='button button-assertive order-create-sure' ng-click="finishOrder()" ng-hide="isEdit">确定订单</button>
+    </div>
+
+
+
+</ion-footer-bar>

@@ -1,0 +1,59 @@
+<ion-view view-title="我的收藏" hide-tabs id='favorite'>
+
+    <div class="bar bar-subheader" style="padding:0">
+
+        <ion-list>
+            <ion-item class="item-input item-select">
+                <div class="input-label">
+                    标签选择:
+                </div>
+                <select ng-model="selected.tag" ng-options="(tag.tag | default: '默认标签') for tag in tagList"></select>
+            </ion-item>
+        </ion-list>
+
+    </div>
+
+    <ion-content class="has-subheader">
+        <ion-refresher
+                pulling-text="下拉刷新"
+                on-refresh="doRefresh()">
+        </ion-refresher>
+        <ion-list>
+            <ion-item ui-sref='product({id: item.id})' ng-repeat="(key, item) in list" class="goods-list">
+                <h2 ng-bind="item.name"></h2>
+                <p  class="row">
+                    <span class="col" ng-bind="item.manufacturer"></span>
+                    <span class="col spec" ng-bind="item.spec"></span>
+                </p>
+                <p class="row">
+                    <span class="col">
+                        中包装: <i ng-bind="item.middlePackageAmount"></i><i ng-bind="item.packingUnit"></i>
+                    </span>
+                    <span class="col">
+                        大包装: <i ng-bind="item.bigPackageAmount"></i><i ng-bind="item.packingUnit"></i>
+                    </span>
+                    <span class="col" >
+                        可拆零 : <i ng-bind="item.isCustomerControlSale ? '是' : '否'"></i>
+                    </span>
+                </p>
+                <p class="row">
+                    <span class="col">
+                        库存: <i ng-bind="!item.stock ? '暂无库存' : (item.stock >= 100 ? '有货' : item.stock)  "></i>
+                    </span>
+                    <span class="col">
+                        价格: <i ng-bind="item.smallPrice? (item.smallPrice| currency: '￥') : '登陆可见'"></i>
+                    </span>
+                </p>
+                <ion-option-button class="button-positive" ng-click='deleteFavoriteItem(item, key)'>删除</ion-option-button>
+                <ion-option-button class="button-assertive" ng-click="fAddCart(item)">加入购物车</ion-option-button>
+            </ion-item>
+            <ion-item style="text-align: center" ng-if="!hasMore" ng-bind="list.length > 0 ? '已全部加载': '没有商品'"></ion-item>
+        </ion-list>
+
+        <ion-infinite-scroll
+                ng-if="hasMore && loadMore"
+                on-infinite="nextPage()"
+                distance="1%">
+        </ion-infinite-scroll>
+    </ion-content>
+</ion-view>
