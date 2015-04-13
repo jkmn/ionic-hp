@@ -8,79 +8,73 @@ angular.module('starter.controllers', [])
             if (!oCart) {
                 oCart = new CartServices();
             }
-            //验证用户是否登陆过
-            //$scope.userIsLogin(function() {
-                var myPopup = $ionicPopup.show({
-                    templateUrl: 'templates/cart/alertNum.html',
-                    title: item.name,
-                    scope: $scope,
-                    buttons: [
-                        { text: '取消' },
-                        {
-                            text: '<b>确定</b>',
-                            type: 'button-positive',
-                            onTap: function(e) {
+            var myPopup = $ionicPopup.show({
+                templateUrl: 'templates/cart/alertNum.html',
+                title: item.name,
+                scope: $scope,
+                buttons: [
+                    { text: '取消' },
+                    {
+                        text: '<b>确定</b>',
+                        type: 'button-positive',
+                        onTap: function(e) {
 
-                                if (item.addNum < 1) {
-                                    $ionicPopup.alert({title: '购买数量不能小于1'});
+                            if (item.addNum < 1) {
+                                $ionicPopup.alert({title: '购买数量不能小于1'});
+                                e.preventDefault();
+                            } else {
+                                //添加到购物车
+                                oCart.add(item.id, item.addNum, function() {
+                                    $ionicPopup.alert({title: '添加成功'});
+                                }, function(message) {
+                                    $ionicPopup.alert({title:message});
                                     e.preventDefault();
-                                } else {
-                                    //添加到购物车
-                                    oCart.add(item.id, item.addNum, function() {
-                                        $ionicPopup.alert({title: '添加成功'});
-                                    }, function(message) {
-                                        $ionicPopup.alert({title:message});
-                                        e.preventDefault();
-                                    })
-                                }
+                                })
                             }
                         }
-                    ]
-                });
-            //})
-
+                    }
+                ]
+            });
         }
 
         //商品收藏
         $scope.addFavorite = function(item){
             $scope.rootTagList = [];
             $scope.rootSelected = {};
-            //$scope.userIsLogin(function() {
-                FavoriteServices.getTagList()
-                    .success(function(data){
-                        $scope.rootTagList = data;
-                        $scope.rootSelected.tag= data[0];
-                    })
-
-                $ionicPopup.show({
-                    title: '加入收藏夹',
-                    templateUrl: "templates/goods/favorite.html",
-                    scope: $scope,
-                    buttons:  [{ // Array[Object] (optional). Buttons to place in the popup footer.
-                        text: '取消',
-                        type: 'button-default',
-                        onTap: function(e) {
-                            // e.preventDefault() will stop the popup from closing when tapped.
-                        }
-                    }, {
-                        text: '确定',
-                        type: 'button-positive',
-                        onTap: function(e) {
-
-                            FavoriteServices.add(item.id, $scope.rootSelected.tag.tag || '')
-                                .success(function(data) {
-                                    $ionicPopup.alert({title: data.message});
-                                })
-                                .error(function(data, status) {
-                                    if (status == 400) {
-                                        $ionicPopup.alert({title: data.error});
-                                        e.preventDefault();
-                                    }
-                                })
-                        }
-                    }]
+            FavoriteServices.getTagList()
+                .success(function(data){
+                    $scope.rootTagList = data;
+                    $scope.rootSelected.tag= data[0];
                 })
-            //})
+
+            $ionicPopup.show({
+                title: '加入收藏夹',
+                templateUrl: "templates/goods/favorite.html",
+                scope: $scope,
+                buttons:  [{ // Array[Object] (optional). Buttons to place in the popup footer.
+                    text: '取消',
+                    type: 'button-default',
+                    onTap: function(e) {
+                        // e.preventDefault() will stop the popup from closing when tapped.
+                    }
+                }, {
+                    text: '确定',
+                    type: 'button-positive',
+                    onTap: function(e) {
+
+                        FavoriteServices.add(item.id, $scope.rootSelected.tag.tag || '')
+                            .success(function(data) {
+                                $ionicPopup.alert({title: data.message});
+                            })
+                            .error(function(data, status) {
+                                if (status == 400) {
+                                    $ionicPopup.alert({title: data.error});
+                                    e.preventDefault();
+                                }
+                            })
+                    }
+                }]
+            })
         };
 
         //下拉刷新

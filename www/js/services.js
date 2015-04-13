@@ -111,25 +111,9 @@ angular.module('starter.services', ['starter.factory', 'starter.appConfig'])
                     url: sURl,
                     cache: true
                 }, handle)
-
-                // return Http.secretGet(sURl, {cache: true})
-                //     .success(function(data){
-                //         this.item  = this.item.concat(data.pager.list);
-                //         this.isLoad = false;
-                //         this.where.page += 1;
-                //         this.maxPage = data.pager.pageCount;
-                //         this.loadFilter(data.selectorMap);
-                //     }.bind(this))
-                //     .error(function(data, status){
-                //         if (status == 0) {
-                //             this.isLoad = true;
-                //         } else {
-                //             this.isLoad = false;
-                //         }
-                //     }.bind(this));
             };
 
-
+            //设置数据
             List.prototype.setData = function(data){
                   this.item  = this.item.concat(data.pager.list);
                   this.isLoad = false;

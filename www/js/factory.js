@@ -146,7 +146,6 @@ angular.module('starter.factory', [])
                     $state.go('login');
                 }
                 else if (status == 500 || status ==400 ) {
-
                     var confirm=  $ionicPopup.confirm({
                         title: data.error,
                         cancelText: '取消', // String (default: 'Cancel'). The text of the Cancel button.
