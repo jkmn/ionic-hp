@@ -6,60 +6,9 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.directive', 'starter.factory', 'starter.appConfig','starter.filter', 'ipCookie'])
-    .factory('Push', function() {
-        var push;
-        return {
-            setBadge: function(badge) {
-                if (push) {
-                    console.log('jpush: set badge', badge);
-                    plugins.jPushPlugin.setBadge(badge);
-                }
-            },
-            setAlias: function(alias) {
-                if (push) {
-                    console.log('jpush: set alias', alias);
-                    plugins.jPushPlugin.setAlias(alias);
-                }
-            },
-            check: function() {
-                if (window.jpush && push) {
-                    plugins.jPushPlugin.receiveNotificationIniOSCallback(window.jpush);
-                    window.jpush = null;
-                }
-            },
-            init: function(notificationCallback) {
-                // console.log('jpush: start init-----------------------');
-                push = window.plugins && window.plugins.jPushPlugin;
-                if (push) {
-                    console.log('jpush: init');
-                    plugins.jPushPlugin.init();
-                    plugins.jPushPlugin.setDebugMode(true);
-                    plugins.jPushPlugin.openNotificationInAndroidCallback = notificationCallback;
-                    plugins.jPushPlugin.receiveNotificationIniOSCallback = notificationCallback;
-                }
-            }
-        };
-    })
 
-.run(function($ionicPlatform, $rootScope, Push) {
-    var notificationCallback = function(data) {
-        console.log('received data :' + data);
-        var notification = angular.fromJson(data);
-        //app 是否处于正在运行状态
-        var isActive = notification.notification;
+.run(function($ionicPlatform, $rootScope) {
 
-        window.alert(1243);
-
-        // here add your code
-        //ios
-        if (ionic.Platform.isIOS()) {
-
-
-        } else {
-            //非 ios(android)
-
-        }
-    };
 
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -71,14 +20,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-      //初始化
-      Push.init(notificationCallback);
-       //设置别名
-      Push.setAlias("android");
-      //window.plugins.jPushPlugin.init();
-      ////调试模式
-      //
-      //window.plugins.jPushPlugin.setDebugMode(true);
+
+    window.plugins.jPushPlugin.init();
 
   });
 

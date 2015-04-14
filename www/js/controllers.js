@@ -1,5 +1,5 @@
 angular.module('starter.controllers', [])
-    .controller('RootCtrl', function($scope, LoginServices, $state,$ionicHistory,LoginFactory, $ionicTabsDelegate, $ionicPopup,CartServices, FavoriteServices, ProductServices) {
+    .controller('RootCtrl', function($scope, LoginServices, $state,$ionicHistory,LoginFactory, $ionicTabsDelegate, $ionicPopup,CartServices, FavoriteServices, ProductServices, $ionicLoading) {
         var oCart = null;
         //加入购物车
         $scope.fAddCart = function(item) {
@@ -81,16 +81,20 @@ angular.module('starter.controllers', [])
         $scope.doRefresh = function() {
             $scope.$broadcast('doRefresh' + $state.current.name,true);
         }
+        var isLoadRecently = false;
         //获取有效期
         $scope.recentlyBatch = function(item) {
             recentlyBatch(item);
         }
 
         function recentlyBatch(item) {
+            if (isLoadRecently) return ;
+            isLoadRecently = true;
             ProductServices.fRecentlyBatch(item.id, {
                 success: function(data) {
                     if (data.type.toLowerCase() == 'success') {
                         $ionicPopup.alert({title: data.content.replace('<br/>','')});
+                        isLoadRecently = false;
                     }
                 }
             })

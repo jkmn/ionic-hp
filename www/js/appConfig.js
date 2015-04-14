@@ -8,7 +8,7 @@ angular.module('starter.appConfig', [])
 
 .factory('AppUrl',  function(){
     return {
-        host: 'http://www.zjhpyy.com',
+        host: 'http://122.228.188.134:9876',
         category: '/app/goods/cate/list.jhtml', //分类
         cart: {
             add:  '/app/cart/add.jhtml', //添加
