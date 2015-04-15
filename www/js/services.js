@@ -286,7 +286,6 @@ angular.module('starter.services', ['starter.factory', 'starter.appConfig'])
                              if(sCallBack) sCallBack();
                         } else {
                             if (eCallBack) eCallBack(data.tip[1])
-                            //$ionicPopup.alert({title: data.tip[1]})
                         }
                     })
             },
