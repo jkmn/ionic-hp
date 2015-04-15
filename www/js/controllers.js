@@ -1433,17 +1433,38 @@ angular.module('starter.controllers', [])
     .controller('ActivityCtrl', function($scope, ActivityServices) {
 
         $scope.list = [];
-
-        //$scope.$on('$ionicView.beforeEnter', function() {
             request();
-        //})
 
         function request() {
             ActivityServices.get()
                 .success(function(data) {
+
+                    var aList = {};
+                    console.log(data);
+
+                    for(var key in data)
+                    {
+                        var d = data[key];
+                        if(d.length)
+                        {
+                            if (aList[key]) aList[key] = [];
+
+                            d.forEach(function(o,i) {
+                                var g = o.goodsList;
+                                var aO = [];
+                                g.forEach(function(b, k) {
+                                    if (typeof aO[Math.floor(k / 3)] == 'undefined') aO[Math.floor(k / 3)] = [];
+                                    aO[Math.floor(k / 3)].push(b);
+                                })
+                                o.goodsList = aO;
+                            })
+
+                        }
+                    }
                     $scope.list = data;
                 })
         }
+
     })
 
 
