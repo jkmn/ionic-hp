@@ -4,28 +4,35 @@
 	</ion-nav-buttons>
   <ion-content class="has-footer customer-footer">
      <ion-list class="order-create-list">
-       <ion-item ng-repeat="item in oOrder.aDetail.orderItemList">
-         <h2 ng-bind="item.productName"></h2>
-         <p class="row" style="padding:0">
-             <span class="col" ng-bind="item.manufacturer"></span>
-             <span class="col" ng-bind="item.specification" style="text-align: right"></span>
-         </p>
-         <p>
-             数量: <span ng-bind="item.quantity"></span>
-         </p>
-         <p class="row" style="padding:0">
-             <span class="col">单价: <span ng-bind="item.salePrice | currency: '￥'" class="price"></span></span>
-             <span class="col">小计: <span class="price" ng-bind="item.salePrice * item.quantity | currency: '￥'"></span></span>
-         </p>
-           <p>
-               <span>生产日期: <i ng-bind="item.manufacturerDate"></i></span>
+       <div ng-repeat="(key, item) in oOrder.aDetail.orderItemMap">
 
-           </p>
-           <p>
-               <span>有效期: <i ng-bind="item.validDate"></i></span>
-           </p>
-         <ion-option-button ng-click="deleteItem(item, $index)" class="button-assertive" ng-click="deleteOrderItem(item)">删除</ion-option-button>
-       </ion-item>
+         <div ng-repeat='(ky, cItem) in item'>
+          <ion-item class='item-divider' activity-name='{{key}}' activity-id = '{{ky}}' ng-bind='cItem.activityName'></ion-item>
+          <ion-item class='item-text-wrap activituy-msg' ng-hide='key == "ordinaryMap"' ng-bind='cItem.msg'></ion-item>
+           <ion-item ng-repeat='it in cItem.list'>
+             <h2 ng-bind="item.productName"></h2>
+             <p class="row" style="padding:0">
+                 <span class="col" ng-bind="it.manufacturer"></span>
+                 <span class="col" ng-bind="it.specification" style="text-align: right"></span>
+             </p>
+             <p>
+                 数量: <span ng-bind="it.quantity"></span>
+             </p>
+             <p class="row" style="padding:0">
+                 <span class="col">单价: <span ng-bind="it.salePrice | currency: '￥'" class="price"></span></span>
+                 <span class="col">小计: <span class="price" ng-bind="it.salePrice * it.quantity | currency: '￥'"></span></span>
+             </p>
+               <p>
+                   <span>生产日期: <i ng-bind="it.manufacturerDate"></i></span>
+
+               </p>
+               <p>
+                   <span>有效期: <i ng-bind="it.validDate"></i></span>
+               </p>
+             <ion-option-button ng-click="deleteItem(it, $index)" class="button-assertive" ng-click="deleteOrderItem(it)">删除</ion-option-button>
+           </ion-item>
+         </div>
+       </div>
      </ion-list>
 
      <div class="card">

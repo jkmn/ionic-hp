@@ -286,7 +286,6 @@ angular.module('starter.services', ['starter.factory', 'starter.appConfig'])
                              if(sCallBack) sCallBack();
                         } else {
                             if (eCallBack) eCallBack(data.tip[1])
-                            //$ionicPopup.alert({title: data.tip[1]})
                         }
                     })
             },
@@ -377,6 +376,17 @@ angular.module('starter.services', ['starter.factory', 'starter.appConfig'])
             detail: function() {
                 Http.get(AppUrl['host'] + AppUrl['order']['detail'] + this.orderNo, {cache: false})
                     .success(function(data){
+
+                        this.aDetail = data;
+                    }.bind(this))
+                    .error(function(data, status){
+                        console.log(status);
+                    });
+            },
+             info: function() {
+                Http.get(AppUrl['host'] + AppUrl['order']['info'] + this.orderNo, {cache: false})
+                    .success(function(data){
+                         console.log(data)
                         this.aDetail = data;
                     }.bind(this))
                     .error(function(data, status){

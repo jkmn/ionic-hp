@@ -15,32 +15,40 @@
               on-refresh="doRefresh()">
       </ion-refresher>
 
-	<ion-list  class='cart-list'>
-	  <ion-item class='item-checkbox cart-item' goods-code = "{{item.goods.code}}" ng-repeat="item in cart.list">
-		<label class="checkbox cart-checkbox checkbox-assertive">
-	       <input type="checkbox"  ng-checked="" ng-model="item.isChecked" ng-click="checkedItem(item)">
-	    </label>
-	    <h2 ui-sref="product({id:item.goods.id})" ng-bind="item.goods.name"></h2>
-	    <p ng-bind="item.goods.manufacturer"></p>
-    	<p ng-bind="item.goods.spec"></p>
-          <p ng-hide='isEdit' on-tap='openNumPanel(item)' >
-              数量: <span ng-bind="item.quantity"></span>
+	<ion-list  class='cart-list'  >
+    <div ng-repeat="(key, item) in cart.list.cartItemMap">
+      <div ng-repeat='(ky, cItem) in item'>
+        <ion-item class='item-divider' activity-name='{{key}}' activity-id = '{{ky}}' ng-bind='cItem.activityName'></ion-item>
+        <ion-item class='item-text-wrap activituy-msg' ng-hide='key == "ordinaryMap"' ng-bind='cItem.msg'></ion-item>
+        <ion-item class='item-checkbox cart-item' goods-code = "{{item.goods.code}}" ng-repeat='it in cItem.list'>
+          <label class="checkbox cart-checkbox checkbox-assertive">
+               <input type="checkbox"  ng-checked="" ng-model="it.isChecked" ng-click="checkedItem(it)">
+          </label>
+          <h2 ui-sref="product({id:it.goods.id})" ng-bind="it.goods.name"></h2>
+          <p ng-bind="it.goods.manufacturer"></p>
+          <p ng-bind="it.goods.spec"></p>
+          <p ng-hide='isEdit' on-tap='openNumPanel(it)' >
+              数量: <span ng-bind="it.quantity"></span>
               <i class='icon ion-edit'></i>
           </p>
           <p>
-              单价: <span class="price" ng-bind="item.goods.smallPrice | currency: '￥'"></span>
-              小计: <span class="price" ng-bind="(item.goods.smallPrice * item.quantity) | currency: '￥'"></span>
+              单价: <span class="price" ng-bind="it.goods.smallPrice | currency: '￥'"></span>
+              小计: <span class="price" ng-bind="(it.goods.smallPrice * it.quantity) | currency: '￥'"></span>
           </p>
 
           <div class='modify-num-box row' ng-show='isEdit'>
-              <i class='button icon ion-plus button-small' ng-click="pulsNum(item)"></i>
-              <input type="text"  class="cart-number" ng-change="changeCartNum(item)" ng-model='item.quantity'>
-              <i class='button icon ion-minus button-small' ng-click="minusNum(item)"></i>
+              <i class='button icon ion-plus button-small' ng-click="pulsNum(it)"></i>
+              <input type="text"  class="cart-number" ng-change="changeCartNum(it)" ng-model='it.quantity'>
+              <i class='button icon ion-minus button-small' ng-click="minusNum(it)"></i>
           </div>
-          <ion-option-button class="button-positive" ng-click="addFavorite(item.goods)">收藏</ion-option-button>
-		<ion-option-button class="button-assertive" ng-click="deleteCartItem(item, $index)">删除</ion-option-button>
-	  </ion-item>
-      <ion-item ng-if="isFinishLoad && !cart.list.length" style='text-align: center'> 购物车里没有商品</ion-item>
+          <ion-option-button class="button-positive" ng-click="addFavorite(it.goods)">收藏</ion-option-button>
+          <ion-option-button class="button-assertive" ng-click="deleteCartItem(it, $index)">删除</ion-option-button>
+       </ion-item>
+      </div>
+
+    <ion-item ng-if="isFinishLoad && !cart.list.cartItemMap" style='text-align: center'> 购物车里没有商品</ion-item>
+    </div>
+
 	</ion-list>
 
 

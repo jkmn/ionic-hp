@@ -541,19 +541,101 @@ angular.module('starter.controllers', [])
             })
         })
         $scope.$on('doRefresh' + $state.current.name, function() {
+            $scope.isFinishLoad = false;
+            $scope.isEdit = false;
+            $scope.totalAmount = 0;
+            $scope.isChecked = false;
             oCart.getList()
                 .finally(function() {
                     $scope.$broadcast('scroll.refreshComplete');
                 })
         })
+        var route = false;
+        $scope.$watch('cart.list', function(data) {
+            if (data.length !== 0)
+            {
+                route = $.parseJSON(data.promotionRules);
+                fActivity();
+            }
+        });
+
+        $scope.$watch('totalAmount', function(newT) {
+
+            if (route)
+            {
+               fActivity();
+            }
+
+        });
+
+        function fActivity() {
+                for (key in oCart.list.cartItemMap)
+                {
+                    for (ky in oCart.list.cartItemMap[key])
+                    {
+                        var oCartItemList = [];
+                        oCart.list.cartItemMap[key][ky].list.forEach(function(o)
+                        {
+                            if (o.isChecked) oCartItemList.push({totalAmount: o.goods.smallPrice * o.quantity})
+                        })
+                        var msg = '';
+                        if(oCartItemList.length)
+                        {
+                            var fn = activityAmountProviter(), ta = false;
+                            switch(key.toLowerCase())
+                            {
+                                case 'hignrebate':
+                                    ta = fn['dicount'](oCartItemList, route[key]);
+                                    if (ta.discountRate > 0)
+                                    {
+                                        msg += '满足活动: (产品' + ta.accordNum + '个  可折让' + (ta.discountRate * 100).toFixed(0) + '%)'
+                                    }
+                                break;
+                                case 'oilcard':
+                                case 'ticketdiscount':
+                                    ta = fn['cashBack'](oCartItemList, route[key]);
+                                    if (ta.discount > 0)
+                                    {
+                                        msg = (key.toLowerCase() == 'oilcard' ? '可返油卡' : '可票面折让')  + ta.discount.toFixed(2) +  '元';
+                                    }
+                                break;
+                            }
+                            if (msg)
+                            {
+                                oCart.list.cartItemMap[key][ky]['msg'] = msg;
+
+                            }
+
+                        }
+                        if (msg == '')
+                        {
+                            var iMsg = '';
+
+                            switch(key.toLowerCase())
+                            {
+                                case 'oilcard':
+                                case 'ticketdiscount':
+                                     var litRoute = route[key][route[key].length - 1];
+                                    iMsg = '满' + litRoute.totalAmount + '元'+ (key.toLowerCase() == 'oilcard' ? '可返油卡' : '可票面折让') +'' + litRoute.discount + '元';
+                                break;
+                                case 'hignrebate' :
+                                    var litRoute = route[key][route[key].length - 1];
+                                    iMsg = '活动最低要求单次进货' +  litRoute['itemCount'] + '个产品并且每个产品不低于' + litRoute['perItemAmount'] + '元并且活动金额满足' + litRoute.totalAmount + '元即可折让' + (litRoute['discountRate'] * 100).toFixed(0) + '%'
+
+                            }
+                             oCart.list.cartItemMap[key][ky]['msg'] = iMsg;
+
+
+                        }
+                    }
+                }
+        }
+
 
 
         $scope.toggle = function() {
             $scope.isEdit = !$scope.isEdit;
         }
-        //$scope.getList = function() {
-        //    return oCart.list;
-        //}
         $scope.addCartItem = {addNum: 1};
 
         //打开商品修改
@@ -691,12 +773,18 @@ angular.module('starter.controllers', [])
                 $scope.isChecked = false;
             } else {
                 var allChecked = true;
-                oCart.list.forEach(function(item) {
 
-                    if (!item.isChecked){
-                        allChecked = false;
+                for (var item in oCart.list.cartItemMap)
+                {
+                    for (var i in oCart.list.cartItemMap[item])
+                    {
+                        var a = oCart.list.cartItemMap[item][i];
+                        a.list.forEach(function(o)
+                        {
+                            if (!o.isChecked) allChecked = false;
+                        });
                     }
-                })
+                }
                 $scope.isChecked = allChecked;
             }
             setCheckedTotalAmount();
@@ -706,29 +794,59 @@ angular.module('starter.controllers', [])
 
         $scope.checkedAll = function() {
             $scope.totalAmount = 0;
-            oCart.list.forEach(function(item) {
-                item.isChecked = $scope.isChecked;
-            })
+            for (var item in oCart.list.cartItemMap)
+            {
+                for (var i in oCart.list.cartItemMap[item])
+                {
+                    var a = oCart.list.cartItemMap[item][i];
+                    a.list.forEach(function(o)
+                    {
+                        o.isChecked = $scope.isChecked;
+                    });
+                }
+            }
             setCheckedTotalAmount();
         }
 
         function setCheckedTotalAmount() {
             $scope.totalAmount = 0;
-            oCart.list.forEach(function(item) {
-                if (item.isChecked) {
-                    $scope.totalAmount += item.goods.smallPrice * item.quantity;
+            for (var item in oCart.list.cartItemMap)
+            {
+                for (var i in oCart.list.cartItemMap[item])
+                {
+                    var a = oCart.list.cartItemMap[item][i];
+                    a.list.forEach(function(o)
+                    {
+                        if (o.isChecked) {
+                            $scope.totalAmount += o.goods.smallPrice * o.quantity;
+                        }
+                    });
                 }
-            })
+            }
         }
 
         //获取选中的购物车项的id
         function getCheckedIds() {
             var aIds = []
-            oCart.list.forEach(function(item) {
-                if (item.isChecked) {
-                    aIds.push(item.id);
+            // oCart.list.forEach(function(item) {
+            //     if (item.isChecked) {
+            //         aIds.push(item.id);
+            //     }
+            // })
+
+            for (var item in oCart.list.cartItemMap)
+            {
+                for (var i in oCart.list.cartItemMap[item])
+                {
+                    var a = oCart.list.cartItemMap[item][i];
+                    a.list.forEach(function(o)
+                    {
+                        if (o.isChecked) {
+                            aIds.push(o.id);
+                        }
+                    });
                 }
-            })
+            }
             return aIds;
         }
     })
@@ -737,7 +855,7 @@ angular.module('starter.controllers', [])
         var orderNo = $stateParams.orderNo;
         $scope.oOrder = new OrderServices();
         $scope.oOrder.orderNo = orderNo;
-        $scope.oOrder.detail();
+        $scope.oOrder.info();
         $scope.msg = {};
         //确定订单
         $scope.finishOrder = function() {
@@ -792,6 +910,77 @@ angular.module('starter.controllers', [])
                 .error(function(data){
                     $.mobile.loading('hide');
                 })
+        }
+
+        var route = '';
+        $scope.$watch('oOrder.aDetail', function(data) {
+            // fActivity();
+            if (!$.isEmptyObject(data))
+            {
+                route = $.parseJSON(data.promotionRules);
+                fActivity();
+            }
+        })
+
+         function fActivity() {
+                for (key in $scope.oOrder.aDetail.orderItemMap)
+                {
+                    for (ky in $scope.oOrder.aDetail.orderItemMap[key])
+                    {
+                        var oCartItemList = [];
+                        $scope.oOrder.aDetail.orderItemMap[key][ky].list.forEach(function(o)
+                        {
+                            oCartItemList.push({totalAmount: o.salePrice * o.quantity})
+                        })
+                        var msg = '';
+                        if(oCartItemList.length)
+                        {
+                            var fn = activityAmountProviter(), ta = false;
+                            switch(key.toLowerCase())
+                            {
+                                case 'hignrebate':
+                                    ta = fn['dicount'](oCartItemList, route[key]);
+                                    if (ta.discountRate > 0)
+                                    {
+                                        msg += '满足活动: (产品' + ta.accordNum + '个  可折让' + (ta.discountRate * 100).toFixed(0) + '%)'
+                                    }
+                                break;
+                                case 'oilcard':
+                                case 'ticketdiscount':
+                                    ta = fn['cashBack'](oCartItemList, route[key]);
+                                    if (ta.discount > 0)
+                                    {
+                                        msg = (key.toLowerCase() == 'oilcard' ? '可返油卡' : '可票面折让')  + ta.discount.toFixed(2) +  '元';
+                                    }
+                                break;
+                            }
+                            if (msg)
+                            {
+                               $scope.oOrder.aDetail.orderItemMap[key][ky]['msg'] = msg;
+
+                            }
+
+                        }
+                        if (msg == '')
+                        {
+                            var iMsg = '';
+
+                            switch(key.toLowerCase())
+                            {
+                                case 'oilcard':
+                                case 'ticketdiscount':
+                                     var litRoute = route[key][route[key].length - 1];
+                                    iMsg = '满' + litRoute.totalAmount + '元'+ (key.toLowerCase() == 'oilcard' ? '可返油卡' : '可票面折让') +'' + litRoute.discount + '元';
+                                break;
+                                case 'hignrebate' :
+                                    var litRoute = route[key][route[key].length - 1];
+                                    iMsg = '活动最低要求单次进货' +  litRoute['itemCount'] + '个产品并且每个产品不低于' + litRoute['perItemAmount'] + '元并且活动金额满足' + litRoute.totalAmount + '元即可折让' + (litRoute['discountRate'] * 100).toFixed(0) + '%'
+
+                            }
+                             $scope.oOrder.aDetail.orderItemMap[key][ky]['msg'] = iMsg;
+                        }
+                    }
+                }
         }
 
 
@@ -1256,3 +1445,78 @@ angular.module('starter.controllers', [])
                 })
         }
     })
+
+
+
+
+
+
+    function activityAmountProviter () {
+        return {
+            //返现
+            cashBack: function(cartItems, rules) {
+                var aT = {
+                    totalAmount : 0,
+                    discount: 0
+                },
+                nAmount = 0;
+                cartItems.forEach(function(c) {
+                    aT.totalAmount += c.totalAmount;
+                });
+                nAmount = aT.totalAmount;
+                for(var i = 0; i < rules.length; i++)
+                {
+                    var r = rules[i];
+                    if (nAmount >= r.totalAmount )
+                    {
+                        aT.discount += Math.floor( nAmount / r.totalAmount) * r.discount;
+                        nAmount = nAmount % r.totalAmount;
+                    }
+                }
+                return aT;
+            },
+
+            /**
+             * 计算票面折让
+             cartItems  [{totalAmount:0}]
+             * rules  { "totalAmount": 2000,
+                        "perItemAmount": 20,
+                        "itemCount": 10,
+                        "discountRate": 0.07}
+
+             */
+            dicount: function(cartItems, rules) {
+                var aT = {discountRate:0};
+                for (var i = 0; i < rules.length; i++ )
+                {
+                    var r = rules[i];
+                    aT = this.passDicountRule(cartItems, r);
+                    if (aT.discountRate)
+                    {
+                        break;
+                    }
+                }
+                return aT;
+            },
+
+            passDicountRule: function(cartItems, rule) {
+                var aT = {
+                    totalAmount: 0, //总金额
+                    accordAmount: 0, //通过规则的总金额
+                    eAmount: 0, //没通过的总金额
+                    accordNum: 0, //通过的数量
+                    eNum: 0,    //没通过的数量
+                    discountRate: 0 //折让金额
+                }
+                cartItems.forEach(function(c) {
+                    var pref = '';
+                    aT.totalAmount += c.totalAmount;
+                    pref = c.totalAmount >= rule.perItemAmount ? 'accord' : 'e';
+                    aT[pref+'Amount'] += c.totalAmount;
+                    aT[pref+'Num'] += 1;
+                })
+                aT.discountRate = aT.accordAmount >= rule.totalAmount && aT.accordNum >= rule.itemCount ? rule.discountRate: 0;
+                return aT;
+            }
+        }
+    }

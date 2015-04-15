@@ -8,7 +8,8 @@ angular.module('starter.appConfig', [])
 
 .factory('AppUrl',  function(){
     return {
-        host: 'http://www.zjhpyy.com',
+
+        host: 'http://192.168.0.147:8100',
         category: '/app/goods/cate/list.jhtml', //分类
         cart: {
             add:  '/app/cart/add.jhtml', //添加
@@ -35,6 +36,7 @@ angular.module('starter.appConfig', [])
         },
         order: {
             create: '/app/order/create.jhtml' ,//创建订单
+            info: '/app/order/info.jhtml?tradeNo=',
             detail: '/app/order/detail.jhtml?tradeNo=', //订单详情
             cancel: '/app/order/cancelOrder.jhtml', //取消订单
             deleteItem: '/app/order/deleteOrderItem.jhtml', //删除订单项
