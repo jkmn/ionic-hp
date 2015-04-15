@@ -9,9 +9,12 @@
                 <span ng-bind="item.name"></span>
             </ion-item>
             <ion-item class="item-text-wrap action-list-scroll">
-                <ion-scroll class="scroll-list" zooming="false" direction="x" style="width: 100%; height: 10em">
-                    <ul class="action-list" style="width:{{item.goodsList.length * 10.5}}em ">
-                        <li ng-repeat="product in item.goodsList">
+
+                <ion-slide-box on-slide-changed="" does-continue=false>
+
+                  <ion-slide show-pager = true ng-repeat="p in item.goodsList">
+                    <ul class="action-list row">
+                        <li ng-repeat="product in p" class='col'>
                             <a ui-sref="product({id: product.id})">
                                 <div class="img">
                                     <img ng-src="{{product.image_default | setImgSize: 96:60}}" style="width:8em;height:5em"/>
@@ -22,7 +25,8 @@
                             </a>
                         </li>
                     </ul>
-                </ion-scroll>
+                  </ion-slide>
+                </ion-slide-box>
             </ion-item>
         </ion-list>
 
@@ -32,9 +36,12 @@
                 <span ng-bind="item.name"></span>
             </ion-item>
             <ion-item class="item-text-wrap action-list-scroll">
-                <ion-scroll class="scroll-list" zooming="false" direction="x" style="width: 100%; height: 10em">
-                    <ul class="action-list" style="width:{{item.goodsList.length * 10.5}}em ">
-                        <li ng-repeat="product in item.goodsList">
+
+                <ion-slide-box on-slide-changed="" does-continue=false>
+
+                  <ion-slide show-pager = true ng-repeat="p in item.goodsList">
+                    <ul class="action-list row">
+                        <li ng-repeat="product in p" class='col'>
                             <a ui-sref="product({id: product.id})">
                                 <div class="img">
                                     <img ng-src="{{product.image_default | setImgSize: 96:60}}" style="width:8em;height:5em"/>
@@ -45,7 +52,8 @@
                             </a>
                         </li>
                     </ul>
-                </ion-scroll>
+                  </ion-slide>
+                </ion-slide-box>
             </ion-item>
         </ion-list>
     </ion-content>
