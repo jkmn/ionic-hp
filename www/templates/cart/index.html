@@ -19,7 +19,7 @@
     <div ng-repeat="(key, item) in cart.list.cartItemMap">
       <div ng-repeat='(ky, cItem) in item'>
         <ion-item class='item-divider' activity-name='{{key}}' activity-id = '{{ky}}' ng-bind='cItem.activityName'></ion-item>
-        <ion-item class='item-text-wrap activituy-msg' ng-bind='cItem.msg'></ion-item>
+        <ion-item class='item-text-wrap activituy-msg' ng-hide='key == "ordinaryMap"' ng-bind='cItem.msg'></ion-item>
         <ion-item class='item-checkbox cart-item' goods-code = "{{item.goods.code}}" ng-repeat='it in cItem.list'>
           <label class="checkbox cart-checkbox checkbox-assertive">
                <input type="checkbox"  ng-checked="" ng-model="it.isChecked" ng-click="checkedItem(it)">

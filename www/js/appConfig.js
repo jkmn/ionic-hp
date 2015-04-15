@@ -35,6 +35,7 @@ angular.module('starter.appConfig', [])
         },
         order: {
             create: '/app/order/create.jhtml' ,//创建订单
+            info: '/app/order/info.jhtml?tradeNo=',
             detail: '/app/order/detail.jhtml?tradeNo=', //订单详情
             cancel: '/app/order/cancelOrder.jhtml', //取消订单
             deleteItem: '/app/order/deleteOrderItem.jhtml', //删除订单项
