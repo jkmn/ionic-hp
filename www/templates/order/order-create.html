@@ -1,6 +1,6 @@
 <ion-view view-title="确定订单" hide-back-button=true hide-tabs>
 	<ion-nav-buttons side="left">
-        <button ng-click="$ionicGoBack($event)" class="button back-button buttons button-clear header-item" style=""><i class="icon ion-ios-arrow-back"></i> </button>
+        <button ng-click="$ionicGoBack($event)" class="button back-button buttons button-clear header-item" style=""><i class="icon ion-android-arrow-back"></i> </button>
 	</ion-nav-buttons>
   <ion-content class="has-footer customer-footer">
      <ion-list class="order-create-list">
@@ -29,7 +29,7 @@
                <p>
                    <span>有效期: <i ng-bind="it.validDate"></i></span>
                </p>
-             <ion-option-button ng-click="deleteItem(it, $index)" class="button-assertive" ng-click="deleteOrderItem(it)">删除</ion-option-button>
+             <ion-option-button ng-click="deleteItem(it, key, ky, $index)" class="button-assertive" >删除</ion-option-button>
            </ion-item>
          </div>
        </div>
@@ -41,8 +41,6 @@
         <input type="text" placeholder="请输入留言" ng-model='msg.orderMsg'>
       </label>
      </div>
-
-
   </ion-content>
 </ion-view>
 <ion-footer-bar class="bar-positive bottom cart-footer order-create-footer row">

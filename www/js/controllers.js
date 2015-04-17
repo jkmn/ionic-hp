@@ -715,11 +715,17 @@ angular.module('starter.controllers', [])
             $scope.changeCartNum(item);
         }
         //删除订单项
-        $scope.deleteCartItem = function(item, key) {
+        $scope.deleteCartItem = function(item, key, ky, index) {
             oCart.del(item.id)
                 .success(function(data) {
                     $ionicPopup.alert({title :data.message});
-                    oCart.list.splice(key,1);
+                    oCart.list.cartItemMap[key][ky]['list'].splice(index,1);
+                    if (oCart.list.cartItemMap[key][ky]['list'].length == 0)
+                    {
+                        delete oCart.list.cartItemMap[key][ky];
+                    }
+                    fActivity();
+
                 })
                 .error(function(datam, status){
                     if(status == 400) {
@@ -900,12 +906,16 @@ angular.module('starter.controllers', [])
             });
         }
 
-        $scope.deleteItem = function(item, key) {
+        $scope.deleteItem = function(item, key, ky, index) {
             $scope.oOrder.deleteItem(item.id)
                 .success(function(data){
                     $scope.oOrder.aDetail.totalAmount = data.totalAmount;
-                    $scope.oOrder.aDetail.orderItemList.splice(key,1);
-                    $ionicPopup.alert({title: '删除成功!'});
+                     $scope.oOrder.aDetail.orderItemMap[key][ky]['list'].splice(index,1);
+                    if ( $scope.oOrder.aDetail.orderItemMap[key][ky]['list'].length == 0)
+                    {
+                        delete  $scope.oOrder.aDetail.orderItemMap[key][ky];
+                    }
+                    fActivity();
                 })
                 .error(function(data){
                     $.mobile.loading('hide');
