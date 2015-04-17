@@ -588,7 +588,7 @@ angular.module('starter.controllers', [])
                                     ta = fn['dicount'](oCartItemList, route[key]);
                                     if (ta.discountRate > 0)
                                     {
-                                        msg += '满足活动: (产品' + ta.accordNum + '个  可折让' + (ta.discountRate * 100).toFixed(0) + '%)'
+                                        msg += '活动金额:'+ ta.accordAmount.toFixed(2) +'元: (产品' + ta.accordNum + '个  可折让' + (ta.discountRate * 100).toFixed(0) + '%)'
                                     }
                                 break;
                                 case 'oilcard':
@@ -596,7 +596,7 @@ angular.module('starter.controllers', [])
                                     ta = fn['cashBack'](oCartItemList, route[key]);
                                     if (ta.discount > 0)
                                     {
-                                        msg = (key.toLowerCase() == 'oilcard' ? '可返油卡' : '可票面折让')  + ta.discount.toFixed(2) +  '元';
+                                        msg = '商品合计:' + ta.totalAmount + '元 ' + (key.toLowerCase() == 'oilcard' ? '可返油卡' : '可票面折让')  + ta.discount.toFixed(2) +  '元';
                                     }
                                 break;
                             }
@@ -942,7 +942,7 @@ angular.module('starter.controllers', [])
                                     ta = fn['dicount'](oCartItemList, route[key]);
                                     if (ta.discountRate > 0)
                                     {
-                                        msg += '满足活动: (产品' + ta.accordNum + '个  可折让' + (ta.discountRate * 100).toFixed(0) + '%)'
+                                        msg += '活动金额:'+ ta.accordAmount.toFixed(2) +'元: (产品' + ta.accordNum + '个  可折让' + (ta.discountRate * 100).toFixed(0) + '%)'
                                     }
                                 break;
                                 case 'oilcard':

@@ -1,4 +1,9 @@
-<ion-view view-title="我的收藏" hide-tabs id='favorite'>
+<ion-view view-title="我的收藏" hide-tabs id='favorite' hide-back-button="true">
+
+
+ <ion-nav-buttons side="left">
+        <button ng-click="$ionicGoBack($event)" class="button back-button buttons button-clear header-item" style=""><i class="icon ion-android-arrow-back"></i> </button>
+    </ion-nav-buttons>
 
     <div class="bar bar-subheader" style="padding:0">
 
@@ -31,9 +36,6 @@
                     </span>
                     <span class="col">
                         大包装: <i ng-bind="item.bigPackageAmount"></i><i ng-bind="item.packingUnit"></i>
-                    </span>
-                    <span class="col" >
-                        可拆零 : <i ng-bind="item.isCustomerControlSale ? '是' : '否'"></i>
                     </span>
                 </p>
                 <p class="row">

@@ -5,6 +5,7 @@ a:-webkit-any-link  {text-decoration: none; color: #999;}
 .hide-tabs.tabs-bottom .tabs{
     display: none;
 }
+button.header-item {padding: 0 20px!important;}
 .hide-tabs .cb-has-tabs.tabs {
     display: -webkit-box;
     display: -webkit-flex;
