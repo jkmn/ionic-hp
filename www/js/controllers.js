@@ -1435,12 +1435,12 @@ angular.module('starter.controllers', [])
         $scope.list = [];
             request();
 
+
         function request() {
             ActivityServices.get()
                 .success(function(data) {
 
                     var aList = {};
-                    console.log(data);
 
                     for(var key in data)
                     {
