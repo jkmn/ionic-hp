@@ -47,7 +47,7 @@
 </ion-view>
 <ion-footer-bar class="bar-positive bottom cart-footer order-create-footer row">
     <div class ="col order-create-total">
-        <span >总价: <span ng-bind="oOrder.aDetail.totalAmount | currency : '￥'"></span></span>
+        <span >总价: <span ng-bind="oOrder.aDetail.orderAmount | currency : '￥'"></span></span>
     </div>
     <div class="buttons">
         <a href="" class="button button-clear button-small order-create-cancel" ng-click="cancelOrder()">取消订单</a>

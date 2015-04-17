@@ -386,7 +386,6 @@ angular.module('starter.services', ['starter.factory', 'starter.appConfig'])
              info: function() {
                 Http.get(AppUrl['host'] + AppUrl['order']['info'] + this.orderNo, {cache: false})
                     .success(function(data){
-                         console.log(data)
                         this.aDetail = data;
                     }.bind(this))
                     .error(function(data, status){
