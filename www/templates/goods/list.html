@@ -13,7 +13,7 @@
             筛选
         </button>
     </ion-nav-buttons>
-    <div class="bar bar-subheader" ng-show="showSubHeader">
+    <div class="bar bar-subheader" ng-show='showSubHeader'>
         <div class="tabs">
             <a class="tab-item" ui-sref='tab.category'>
                 <i class="icon ion-ios-home"></i>
@@ -28,16 +28,10 @@
             </a>
         </div>
     </div>
-    <ion-content>
-<!--         <ion-refresher
-                pulling-text="下拉刷新"
-                on-refresh="doRefresh()">
-        </ion-refresher> -->
-
+    <ion-content class="has-footer customer-footer ">
         <div class="list" >
             <div class="item item-button-right goods-list" ng-repeat="item in goodsList.item">
                 <ul class="ico-list">
-                    <!--<li class="list-ico xq" on-tap="recentlyBatch(item)"></li>-->
                     <li class="list-ico cx" ng-if="item.promotion"></li>
                     <li class='list-ico yb' ng-if="item.medicalInsuranceType">
                 </ul>
@@ -80,20 +74,18 @@
                 </button>
                 <button class="button button-assertive add-cart-button" ng-if="item.stock" ng-click="fAddCart(item)">
                     <i class="icon ion-android-cart"></i>
-                    <!--加<br/>入<br/>购<br/>物<br/>车-->
                 </button>
                 <button class="button button-stable add-cart-button " ng-class="{'no-stock': !item.stock}" disabled ng-if="!item.stock">
-                    <!--<i class="icon ion-android-cart"></i>-->
                     暂<br/>无<br/>库<br/>存
                 </button>
             </div>
-            <div class="item" style="text-align: center" ng-if="!hasMore()" ng-bind="goodsList.item.length > 0 ? '已全部加载': '没有商品'"></div>
         </div>
-
-        <ion-infinite-scroll
-                ng-if="hasMore()"
-                on-infinite="nextPage()"
-                distance="1%">
-        </ion-infinite-scroll>
     </ion-content>
+     <div class="bar bar-footer cb-has-tabs goods-footer bar-positive" >
+        <a href="javascript:;" class='button  button-stable' ng-click='prev()'>上一页</a>
+        <div class="title" ng-show='oGoodsList.maxPage'>
+            <span ng-bind='oGoodsList.where.page'></span> / <span ng-bind='oGoodsList.maxPage'></span>
+        </div>
+        <a href="javascript:;" class='button button-stable' ng-click='next()'>下一页</a>
+    </div>
 </ion-view>

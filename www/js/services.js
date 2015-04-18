@@ -109,15 +109,16 @@ angular.module('starter.services', ['starter.factory', 'starter.appConfig'])
 
                 HttpFactory({
                     url: sURl,
-                    cache: true
+                    cache: true,
+                    hasLoading: true
                 }, handle)
             };
 
             //设置数据
             List.prototype.setData = function(data){
-                  this.item  = this.item.concat(data.pager.list);
+                  this.item  = data.pager.list;
                   this.isLoad = false;
-                  this.where.page += 1;
+                  // this.where.page += 1;
                   this.maxPage = data.pager.pageCount;
                   this.loadFilter(data.selectorMap);
             }
@@ -150,7 +151,7 @@ angular.module('starter.services', ['starter.factory', 'starter.appConfig'])
 
             //列表是已经全部载入
             List.prototype.isFinish = function() {
-                if (typeof this.maxPage == 'number' && this.where.page > this.maxPage) {
+                if (typeof this.maxPage == 'number' && this.where.page >= this.maxPage) {
                     return true;
                 }
                 return false;
@@ -220,13 +221,13 @@ angular.module('starter.services', ['starter.factory', 'starter.appConfig'])
                         i.isSelected = false;
                     })
                 });
-                this.where = {
+                 this.where = $.extend({}, this.where,{
                     page: 1,
                     manufacture:0,//生产厂家
                     drugform:0,//剂型
                     prescribeType: 0,//处方类型
                     medicalInsuranceType: 0//医保类型
-                };
+                });
             }
 
             return List;

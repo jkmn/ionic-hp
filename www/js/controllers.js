@@ -161,6 +161,7 @@ angular.module('starter.controllers', [])
     //商品列表
     .controller('GoodsListCtrl',  function($scope, $state,$rootScope, $ionicHistory,$ionicModal, $stateParams, $timeout, $ionicNavBarDelegate, $ionicScrollDelegate, GoodsListServices, FavoriteServices) {
         var oGoodsListServices = new GoodsListServices();
+        $scope.oGoodsList = oGoodsListServices;
         if ( $stateParams.id) {
             oGoodsListServices.where.cat = $stateParams.id;
         }
@@ -186,8 +187,9 @@ angular.module('starter.controllers', [])
         }
 
         $scope.goodsList = oGoodsListServices;
-        //加载更多
+
         $scope.nextPage = function() {
+          $ionicScrollDelegate.scrollTop(false);
            var h = oGoodsListServices.nextPage({
                 success: function(data){
                     oGoodsListServices.setData(data);
@@ -200,22 +202,31 @@ angular.module('starter.controllers', [])
                 }
            });
         }
-        var hasMore = true;
-        $scope.hasMore = function() {
-            return !oGoodsListServices.isFinish() && hasMore;
-        }
-        $scope.$on('doRefresh' + $state.current.name, function(data) {
-            hasMore = true;
-            oGoodsListServices.initData();
+
+
+
+
+        $scope.nextPage();
+
+
+        $scope.next = function(){
+
+            if (oGoodsListServices.isFinish()) return;
+            oGoodsListServices.where.page += 1;
+
             $scope.nextPage();
-        })
+        }
+
+        $scope.prev = function(){
+            if(oGoodsListServices.where.page == 1) return false;
+            oGoodsListServices.where.page -= 1;
+            $scope.nextPage();
+        }
+
 
         $scope.tempFilter = []; //临时存放筛选条件
         $scope.tempFilterList = [];//临时筛选列表
 
-        $scope.$on('$ionicView.beforeLeave', function(){
-            hasMore = false;
-        })
         $scope.$on('$ionicView.afterLeave', function() {
             $scope.tempFilter = []; //临时存放筛选条件
             $scope.tempFilterList = [];//临时筛选列表
@@ -223,7 +234,6 @@ angular.module('starter.controllers', [])
             $scope.listModal.remove();
         })
         $scope.$on('$ionicView.afterEnter', function() {
-                hasMore = true;
                 $ionicModal.fromTemplateUrl('templates/goods/filter.html', {
                     scope: $scope,
                     animation: 'slide-in-up'
@@ -255,7 +265,6 @@ angular.module('starter.controllers', [])
 
         $scope.openFilterListModal = function(item) {
             $scope.listModal.show();
-            //oGoodsListServices.loadFilterList(item.key)
             loadFilterList(item.key);
         }
 
@@ -354,11 +363,6 @@ angular.module('starter.controllers', [])
             request();
         })
 
-        // $scope.$on('doRefresh'+ $state.current.name ,function() {
-        //     request().finally(function() {
-        //         $scope.$broadcast('scroll.refreshComplete');
-        //     })
-        // })
         $scope.showSubHeader = false;
 
         $scope.toggleSubTabs = function($event) {
