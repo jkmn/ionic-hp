@@ -866,6 +866,7 @@ angular.module('starter.controllers', [])
         $scope.oOrder.orderNo = orderNo;
         $scope.oOrder.info();
         $scope.msg = {};
+        $scope.msg.orderMsg = '';
         //确定订单
         $scope.finishOrder = function() {
             $scope.oOrder.postscript = $scope.msg.orderMsg;
