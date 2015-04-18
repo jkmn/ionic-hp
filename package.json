@@ -16,7 +16,6 @@
   },
   "cordovaPlugins": [
     "org.apache.cordova.device",
-    "/var/developer/package/jpush-phonegap-plugin/",
-    "../../../../../package/jpush-phonegap-plugin/"
+    "/var/developer/package/jpush-phonegap-plugin/"
   ]
 }

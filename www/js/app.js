@@ -23,7 +23,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
     window.plugins.jPushPlugin.init();
 
-    window.plugins.jPushPlugin.setDebugMode(false);
+    window.plugins.jPushPlugin.setDebugMode(true);
+
+
+    window.plugins.jPushPlugin.onResume();
+     window.plugins.jPushPlugin.onPause();
 
   });
 
@@ -72,14 +76,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
   })
       //搜索
-      .state('tab.search', {
+      .state('search', {
           url: '/search',
-          views: {
-              'tab-category': {
+          // views: {
+          //     'tab-category': {
                   templateUrl: 'templates/search/index.html',
                   controller: 'SearchCtrl'
-              }
-          }
+              // }
+          // }
 
       })
 

@@ -1,4 +1,4 @@
-<ion-view view-title="完成订单" hide-back-button=true hide-tabs>
+<ion-view view-title="成功提交订单" hide-back-button=true hide-tabs>
   <ion-content>
     <ion-list>
       <ion-item>
@@ -15,7 +15,7 @@
         </ion-item>
         <ion-item>
             <h2>订单金额:</h2>
-            <p ng-bind="oOrder.aDetail.totalAmount | currency: '￥'" class="price"></p>
+            <p ng-bind="oOrder.aDetail.orderAmount | currency: '￥'" class="price"></p>
         </ion-item>
     </ion-list>
 

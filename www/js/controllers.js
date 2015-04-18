@@ -297,7 +297,7 @@ angular.module('starter.controllers', [])
             },300)
         }
         $scope.goToSearch = function(){
-            $state.go('tab.search');
+            $state.go('search');
         }
 
         $scope.getFilterList = function() {
