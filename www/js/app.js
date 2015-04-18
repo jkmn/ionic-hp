@@ -23,6 +23,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
     window.plugins.jPushPlugin.init();
 
+    window.plugins.jPushPlugin.setDebugMode(false);
+
   });
 
 
