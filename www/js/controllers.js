@@ -718,6 +718,7 @@ angular.module('starter.controllers', [])
         $scope.deleteCartItem = function(item, key, ky, index) {
             oCart.del(item.id)
                 .success(function(data) {
+                    console.log(data);
                     $ionicPopup.alert({title :data.message});
                     oCart.list.cartItemMap[key][ky]['list'].splice(index,1);
                     if (oCart.list.cartItemMap[key][ky]['list'].length == 0)
@@ -725,12 +726,14 @@ angular.module('starter.controllers', [])
                         delete oCart.list.cartItemMap[key][ky];
                     }
                     fActivity();
+                    setCheckedTotalAmount();
 
                 })
                 .error(function(datam, status){
                     if(status == 400) {
                         $ionicPopup.alert({title :data.error});
                     }
+                    setCheckedTotalAmount();
             })
 
         }
@@ -909,7 +912,7 @@ angular.module('starter.controllers', [])
         $scope.deleteItem = function(item, key, ky, index) {
             $scope.oOrder.deleteItem(item.id)
                 .success(function(data){
-                    $scope.oOrder.aDetail.totalAmount = data.totalAmount;
+                    $scope.oOrder.aDetail.orderAmount = data.totalAmount;
                      $scope.oOrder.aDetail.orderItemMap[key][ky]['list'].splice(index,1);
                     if ( $scope.oOrder.aDetail.orderItemMap[key][ky]['list'].length == 0)
                     {
