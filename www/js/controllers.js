@@ -738,6 +738,59 @@ angular.module('starter.controllers', [])
 
         }
 
+
+        //删除选择的订单项
+        $scope.deleteCheckedOrder = function()
+        {
+            var aCheckedIds = getCheckedIds();
+            if (aCheckedIds.length ==0)
+            {
+                $ionicPopup.alert({title: '请先选择要删除的商品!'});
+                return false;
+            }
+            $ionicPopup.confirm({
+                title: '确定删除已选择的商品',
+                cancelText: '取消',
+                okText: '确定'
+            }).then(function(res)
+            {
+                if (res)
+                {
+                    oCart.del(aCheckedIds.join(','))
+                    .success(function(data){
+                        $ionicPopup.alert({title: data.message});
+
+                        aCheckedIds.forEach(function(nId) {
+                            for (var key in oCart.list.cartItemMap) {
+                                var o = oCart.list.cartItemMap[key];
+                                for(var ky in o) {
+                                    var item = o[ky];
+                                    item.list.forEach(function(it, nK){
+                                        if (it.id == nId) {
+                                             oCart.list.cartItemMap[key][ky]['list'].splice(nK,1);
+                                        }
+                                    })
+                                    if (oCart.list.cartItemMap[key][ky]['list'].length == 0)
+                                    {
+                                        delete oCart.list.cartItemMap[key][ky];
+                                    }
+                                }
+                            }
+                        })
+                        fActivity();
+                        setCheckedTotalAmount();
+
+                    })
+                    .error(function(data, status){
+                        console.log(status);
+                    })
+                }
+            })
+
+
+
+        }
+
         $scope.createOrder = function() {
             var aIds = getCheckedIds();
             if (!aIds.length) {
@@ -797,8 +850,6 @@ angular.module('starter.controllers', [])
                 $scope.isChecked = allChecked;
             }
             setCheckedTotalAmount();
-
-
         }
 
         $scope.checkedAll = function() {
@@ -837,11 +888,6 @@ angular.module('starter.controllers', [])
         //获取选中的购物车项的id
         function getCheckedIds() {
             var aIds = []
-            // oCart.list.forEach(function(item) {
-            //     if (item.isChecked) {
-            //         aIds.push(item.id);
-            //     }
-            // })
 
             for (var item in oCart.list.cartItemMap)
             {

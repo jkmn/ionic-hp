@@ -1,4 +1,4 @@
-<ion-view view-title="购物车" hide-tabs>
+\<ion-view view-title="购物车" hide-tabs>
   <ion-nav-buttons side="left">
 	<button ng-click="$ionicGoBack($event)" class="button back-button buttons button-clear header-item" style=""><i class="icon ion-android-arrow-back"></i> </button>
   </ion-nav-buttons>
@@ -61,4 +61,5 @@
     </ion-checkbox>
 
     <button class='button button-assertive create-order' ng-click="createOrder()" ng-hide="isEdit">生成订单</button>
+    <button class='button button-assertive create-order' ng-click='deleteCheckedOrder()' ng-show='isEdit'>删除选择</button>
 </ion-footer-bar>
