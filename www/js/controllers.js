@@ -1520,6 +1520,14 @@ angular.module('starter.controllers', [])
                                     if (typeof aO[Math.floor(k / 3)] == 'undefined') aO[Math.floor(k / 3)] = [];
                                     aO[Math.floor(k / 3)].push(b);
                                 })
+                                aO.forEach(function (o) {
+                                    if (o.length < 3)
+                                    {
+                                        for (var i =0; i < 3 - o.length; i++){
+                                            o.push([]);
+                                        }
+                                    }
+                                });
                                 o.goodsList = aO;
                             })
 

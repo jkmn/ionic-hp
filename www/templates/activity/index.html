@@ -15,7 +15,7 @@
                   <ion-slide show-pager = true ng-repeat="p in item.goodsList">
                     <ul class="action-list row">
                         <li ng-repeat="product in p" class='col'>
-                            <a ui-sref="product({id: product.id})">
+                            <a ui-sref="product({id: product.id})" ng-if='product.id'>
                                 <div class="img">
                                     <img ng-src="{{product.image_default | setImgSize: 96:60}}" style="width:8em;height:5em"/>
                                 </div>
@@ -42,7 +42,7 @@
                   <ion-slide show-pager = true ng-repeat="p in item.goodsList">
                     <ul class="action-list row">
                         <li ng-repeat="product in p" class='col'>
-                            <a ui-sref="product({id: product.id})">
+                            <a ui-sref="product({id: product.id})"  ng-if='product.id'>
                                 <div class="img">
                                     <img ng-src="{{product.image_default | setImgSize: 96:60}}" style="width:8em;height:5em"/>
                                 </div>
