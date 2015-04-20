@@ -600,7 +600,7 @@ angular.module('starter.controllers', [])
                                     ta = fn['cashBack'](oCartItemList, route[key]);
                                     if (ta.discount > 0)
                                     {
-                                        msg = '商品合计:' + ta.totalAmount + '元 ' + (key.toLowerCase() == 'oilcard' ? '可返油卡' : '可票面折让')  + ta.discount.toFixed(2) +  '元';
+                                        msg = '商品合计:' + ta.totalAmount.toFixed(2) + '元 ' + (key.toLowerCase() == 'oilcard' ? '可返油卡' : '可票面折让')  + ta.discount.toFixed(2) +  '元';
                                     }
                                 break;
                             }
@@ -1034,11 +1034,11 @@ angular.module('starter.controllers', [])
                                 case 'oilcard':
                                 case 'ticketdiscount':
                                      var litRoute = route[key][route[key].length - 1];
-                                    iMsg = '满' + litRoute.totalAmount + '元'+ (key.toLowerCase() == 'oilcard' ? '可返油卡' : '可票面折让') +'' + litRoute.discount + '元';
+                                    iMsg = '满' + litRoute.totalAmounttoFixed(2) + '元'+ (key.toLowerCase() == 'oilcard' ? '可返油卡' : '可票面折让') +'' + litRoute.discounttoFixed(2) + '元';
                                 break;
                                 case 'hignrebate' :
                                     var litRoute = route[key][route[key].length - 1];
-                                    iMsg = '活动最低要求单次进货' +  litRoute['itemCount'] + '个产品并且每个产品不低于' + litRoute['perItemAmount'] + '元并且活动金额满足' + litRoute.totalAmount + '元即可折让' + (litRoute['discountRate'] * 100).toFixed(0) + '%'
+                                    iMsg = '活动最低要求单次进货' +  litRoute['itemCount'] + '个产品并且每个产品不低于' + litRoute['perItemAmount'] + '元并且活动金额满足' + litRoute.totalAmounttoFixed(2) + '元即可折让' + (litRoute['discountRate'] * 100).toFixed(0) + '%'
 
                             }
                              $scope.oOrder.aDetail.orderItemMap[key][ky]['msg'] = iMsg;
