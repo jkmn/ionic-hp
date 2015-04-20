@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.directive', 'starter.factory', 'starter.appConfig','starter.filter', 'ipCookie'])
 
-.run(function($ionicPlatform, $rootScope) {
+.run(function($ionicPlatform, $rootScope, jpushService) {
 
 
   $ionicPlatform.ready(function() {
@@ -21,13 +21,49 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       StatusBar.styleDefault();
     }
 
+
+    // var setTagsWithAliasCallback=function(event){
+    //   window.alert('result code:'+event.resultCode+' tags:'+event.tags+' alias:'+event.alias);
+    // }
+
+
+    //  var openNotificationInAndroidCallback=function(data){
+    //   var json=data;
+    //   window.alert(json);
+    //   if(typeof data === 'string'){
+    //     json=JSON.parse(data);
+    //   }
+    //   var id=json.extras['cn.jpush.android.EXTRA'].id;
+    //   window.alert(id);
+    //   $state.go('product',{id:id});
+    // }
+    // var config={
+    //   stac:setTagsWithAliasCallback,
+    //   oniac:openNotificationInAndroidCallback
+    // };
+
+    // jpushService.init(config);
+    // jpushService.setTags('dev');
+
+    // var onOpenNotification = function(event)
+    // {
+    //    var alertContent
+    //         if(device.platform == "Android"){
+    //             alertContent=window.plugins.jPushPlugin.openNotification.alert;
+    //         }else{
+    //             alertContent   = event.aps.alert;
+    //         }
+    //         alert("open Notificaiton:"+alertContent);
+
+    //         $state.go('product',{id:9883});
+    // }
+
     window.plugins.jPushPlugin.init();
 
+    // document.addEventListener("jpush.openNotification", onOpenNotification, false);
+
+    // window.plugins.jPushPlugin.openNotificationInAndroidCallback = openNotificationInAndroidCallback;
     window.plugins.jPushPlugin.setDebugMode(true);
-
-
-    window.plugins.jPushPlugin.onResume();
-     window.plugins.jPushPlugin.onPause();
 
   });
 
